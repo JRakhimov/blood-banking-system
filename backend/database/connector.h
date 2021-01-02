@@ -17,6 +17,8 @@ void closeConnection(MYSQL *connection);
 
 void makeQuery(MYSQL *connection, char *query);
 
+int isEqual(char *string1, char *string2);
+
 // Functions implementations
 
 MYSQL *connectDatabase() {
@@ -46,6 +48,22 @@ void makeQuery(MYSQL *connection, char *query) {
   mysql_stmt_prepare(stmt, query,strlen(query));
   mysql_stmt_execute(stmt);
   mysql_stmt_close(stmt);
+}
+
+int isEqual(char *string1, char *string2) {
+  char *temp1 = string1;
+  char *temp2 = string2;
+  
+  int status = 0; // return 1 if true and 0 if false
+  
+  if((strcmp(temp1,temp2)) == 0 ){
+      status = 1; 
+  }
+  else{
+      status = 0;
+  }
+
+  return status;
 }
 
 #endif

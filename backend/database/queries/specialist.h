@@ -4,9 +4,9 @@
 #include "../connector.h"
 #include "../../entities/specialist.h"
 
-void insertNewSpecialist(int id, char *name, char *password)
-{
+void insertNewSpecialist(int id, char *name, char *password) {
     MYSQL connection = connectDatabase();
+
     char query[100];
     sprintf(query, "INSERT INTO %s.specialist (id, name, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, name, password);
     printf("%s\n", query);
@@ -17,13 +17,13 @@ void insertNewSpecialist(int id, char *name, char *password)
     closeConnection(connection);
 }
 
-Specialist SelectSpecialistByName(char *name)
-{
+Specialist selectSpecialistByUsername(char *username) {
     struct Specialist specialist;
 
     MYSQL connection = connectDatabase();
+
     char query[100];
-    sprintf(query, "SELECT * FROM %s.specialist where name = \"%s\";", DATABASE_NAME, name);
+    sprintf(query, "SELECT * FROM %s.specialist where username = \"%s\";", DATABASE_NAME, username);
 
     MYSQL_RES *res;
     MYSQL_ROW row;
@@ -35,7 +35,8 @@ Specialist SelectSpecialistByName(char *name)
     {
         specialist.id = atoi(row[0]);
         specialist.name = row[1];
-        specialist.password = row[2];
+        specialist.username = row[2];
+        specialist.password = row[3];
     }
 
     mysql_free_result(res);
@@ -44,25 +45,23 @@ Specialist SelectSpecialistByName(char *name)
     return specialist;
 }
 
-void DeleteSpecialistByName(char *name)
-{
+void DeleteSpecialistByName(char *username) {
     MYSQL connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "DELETE from test.specialist where name = \"%s\";", name);
-    //prepare prepared statement for transmisson and execution
+    sprintf(query, "DELETE from %s.specialist where username = \"%s\";", DATABASE_NAME, username);
+    // prepare prepared statement for transmisson and execution
     makeQuery(connection, query);
 
     printf("Deletion was successful\n");
     closeConnection(connection);
 }
 
-void UpdateSpecialistPassword(char *name, char *password)
-{
+void UpdateSpecialistPassword(char *name, char *password) {
     MYSQL connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "UPDATE test.specialist SET password = \"%s\" where name = \"%s\";", password, name);
+    sprintf(query, "UPDATE %s.specialist SET password = \"%s\" where name = \"%s\";", DATABASE_NAME, password, name);
 
     makeQuery(connection, query);
 
@@ -70,9 +69,7 @@ void UpdateSpecialistPassword(char *name, char *password)
     closeConnection(connection);
 }
 
-int validSpecialist(char *name, char *password)
-{
-
+int validSpecialist(char *name, char *password) {
     MYSQL connection = connectDatabase();
 
     //variable definnition
@@ -93,46 +90,35 @@ int validSpecialist(char *name, char *password)
     //#####
 
     //Extracting name email(password) and validate with input
-    sprintf(query1, "SELECT name,password FROM test.specialist");
+    sprintf(query1, "SELECT name,password FROM %s.specialist", DATABASE_NAME);
 
     mysql_query(connection, query1);
 
     res = mysql_store_result(connection);
 
-    while (row = mysql_fetch_row(res))
-    {
+    while (row = mysql_fetch_row(res)) {
         DBname = row[0];
         DBpassword = row[1];
 
-        if (IsEqual(DBname, userName))
-        {
+        if (isEqual(DBname, userName)) {
             nameStatus = 1;
-            if (IsEqual(DBpassword, userPassword))
-            {
+            if (isEqual(DBpassword, userPassword)) {
                 passwordStatus = 1;
                 break;
-            }
-            else
-            {
+            } else {
                 passwordStatus = 0;
             }
-        }
-        else
-        {
+        } else {
             nameStatus = 0;
         }
     }
 
     mysql_free_result(res);
 
-    if (nameStatus == 0 || passwordStatus == 0)
-    {
+    if (nameStatus == 0 || passwordStatus == 0) {
         totalStatus = 0;
-    }
-    else
-    {
-        if (nameStatus == 1 && passwordStatus == 1)
-        {
+    } else {
+        if (nameStatus == 1 && passwordStatus == 1) {
             totalStatus = 1;
         }
     }

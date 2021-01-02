@@ -1,6 +1,6 @@
 #include "bootstrap_injection.h"
 #include "../clients_injection.h"
-#include "../request.h"
+#include "../../entities/system/request.h"
 
 int startServer();
 
@@ -153,8 +153,8 @@ int handleConnections()
         else
         {
           /** Handle incoming request */
-          // if (handleRequest(&clients[i], &request))
-          //     fprintf(stderr, "Failed to handle request");
+          if (handleRequest(&clients[i], &request))
+              fprintf(stderr, "Failed to handle request");
         }
       }
     }
