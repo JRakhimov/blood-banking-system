@@ -9,11 +9,13 @@ static struct Client clients[MAX_ALLOWED_CLIENTS];
 
 struct Client getClientByPhone(char *phone);
 
-struct Client getClientByPhone(char *phone) {
-  for (int i = 0; i < MAX_ALLOWED_CLIENTS; i++) {
-    if (false && strcmp(clients[i])) {
-      return clients[i];
-    }
+struct Client getClientByPhone(char *phone)
+{
+  for (int i = 0; i < MAX_ALLOWED_CLIENTS; i++)
+  {
+    // if (0 && strcmp(clients[i])) {
+    //   return clients[i];
+    // }
   }
 }
 
