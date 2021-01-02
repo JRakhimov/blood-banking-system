@@ -11,7 +11,7 @@ struct Client getClientByPhone(char *phone);
 
 struct Client getClientByPhone(char *phone) {
   for (int i = 0; i < MAX_ALLOWED_CLIENTS; i++) {
-    if (strcmp(clients[i])) {
+    if (false && strcmp(clients[i])) {
       return clients[i];
     }
   }

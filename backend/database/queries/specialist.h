@@ -6,71 +6,74 @@
 
 void insertNewSpecialist(int id, char *name, char *password)
 {
-    connectDatabase();
+    MYSQL connection = connectDatabase();
     char query[100];
     sprintf(query, "INSERT INTO %s.specialist (id, name, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, name, password);
     printf("%s\n", query);
 
-    MakeQuery(query);
+    makeQuery(connection, query);
     printf("Insertion was successful\n");
-    close_connection();
+
+    closeConnection(connection);
 }
 
-S_user SelectSpecialistByName(char *name)
+Specialist SelectSpecialistByName(char *name)
 {
+    struct Specialist specialist;
 
-    struct S_user Specialist;
-
-    connectDatabase();
+    MYSQL connection = connectDatabase();
     char query[100];
-    sprintf(query, "SELECT * FROM test.specialist where name = \"%s\";", name);
+    sprintf(query, "SELECT * FROM %s.specialist where name = \"%s\";", DATABASE_NAME, name);
 
     MYSQL_RES *res;
     MYSQL_ROW row;
 
-    mysql_query(conn, query);
+    mysql_query(connection, query);
 
-    res = mysql_store_result(conn);
+    res = mysql_store_result(connection);
     while (row = mysql_fetch_row(res))
     {
-        Specialist.id = atoi(row[0]);
-        Specialist.name = row[1];
-        Specialist.password = row[2];
+        specialist.id = atoi(row[0]);
+        specialist.name = row[1];
+        specialist.password = row[2];
     }
+
     mysql_free_result(res);
-    close_connection();
-    return Specialist;
+    closeConnection(connection);
+
+    return specialist;
 }
 
 void DeleteSpecialistByName(char *name)
 {
-    connect_db();
+    MYSQL connection = connectDatabase();
+
     char query[100];
     sprintf(query, "DELETE from test.specialist where name = \"%s\";", name);
     //prepare prepared statement for transmisson and execution
-    MakeQuery(query);
+    makeQuery(connection, query);
 
     printf("Deletion was successful\n");
-    close_connection();
+    closeConnection(connection);
 }
 
 void UpdateSpecialistPassword(char *name, char *password)
 {
+    MYSQL connection = connectDatabase();
 
-    connect_db();
     char query[100];
     sprintf(query, "UPDATE test.specialist SET password = \"%s\" where name = \"%s\";", password, name);
 
-    MakeQuery(query);
+    makeQuery(connection, query);
 
     printf("Update was successful\n");
-    close_connection();
+    closeConnection(connection);
 }
 
-int ValidSpecialist(char *name, char *password)
+int validSpecialist(char *name, char *password)
 {
 
-    connect_db();
+    MYSQL connection = connectDatabase();
 
     //variable definnition
     MYSQL_RES *res;
@@ -80,62 +83,62 @@ int ValidSpecialist(char *name, char *password)
     char *DBname;
     char *DBpassword; // in future will be used for password
 
-    char *UserName = name;
-    char *UserPassword = password;
+    char *userName = name;
+    char *userPassword = password;
 
-    int NameStatus = 0;
-    int PasswordStatus = 0;
-    int TotalStatus = 0; // return 1 if true, 0 if false
+    int nameStatus = 0;
+    int passwordStatus = 0;
+    int totalStatus = 0; // return 1 if true, 0 if false
 
     //#####
 
     //Extracting name email(password) and validate with input
     sprintf(query1, "SELECT name,password FROM test.specialist");
 
-    mysql_query(conn, query1);
+    mysql_query(connection, query1);
 
-    res = mysql_store_result(conn);
+    res = mysql_store_result(connection);
 
     while (row = mysql_fetch_row(res))
     {
         DBname = row[0];
         DBpassword = row[1];
 
-        if (IsEqual(DBname, UserName))
+        if (IsEqual(DBname, userName))
         {
-            NameStatus = 1;
-            if (IsEqual(DBpassword, UserPassword))
+            nameStatus = 1;
+            if (IsEqual(DBpassword, userPassword))
             {
-                PasswordStatus = 1;
+                passwordStatus = 1;
                 break;
             }
             else
             {
-                PasswordStatus = 0;
+                passwordStatus = 0;
             }
         }
         else
         {
-            NameStatus = 0;
+            nameStatus = 0;
         }
     }
 
     mysql_free_result(res);
 
-    if (NameStatus == 0 || PasswordStatus == 0)
+    if (nameStatus == 0 || passwordStatus == 0)
     {
-        TotalStatus = 0;
+        totalStatus = 0;
     }
     else
     {
-        if (NameStatus == 1 && PasswordStatus == 1)
+        if (nameStatus == 1 && passwordStatus == 1)
         {
-            TotalStatus = 1;
+            totalStatus = 1;
         }
     }
     //#####
-    close_connection();
-    return TotalStatus;
+    closeConnection(connection);
+    return totalStatus;
 }
 
 #endif
