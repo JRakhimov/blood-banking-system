@@ -4,11 +4,11 @@
 #include "../connector.h"
 #include "../../entities/specialist.h"
 
-void insertNewSpecialist(int id, char *name, char *password) {
+void insertNewSpecialist(int id, char *username, char *password) {
     MYSQL connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "INSERT INTO %s.specialist (id, name, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, name, password);
+    sprintf(query, "INSERT INTO %s.specialist (id, username, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, username, password);
     printf("%s\n", query);
 
     makeQuery(connection, query);
@@ -45,10 +45,10 @@ Specialist selectSpecialistByUsername(char *username) {
     return specialist;
 }
 
-void DeleteSpecialistByName(char *username) {
+void deleteSpecialistByName(char *username) {
     MYSQL connection = connectDatabase();
-
     char query[100];
+    
     sprintf(query, "DELETE from %s.specialist where username = \"%s\";", DATABASE_NAME, username);
     // prepare prepared statement for transmisson and execution
     makeQuery(connection, query);
@@ -57,11 +57,11 @@ void DeleteSpecialistByName(char *username) {
     closeConnection(connection);
 }
 
-void UpdateSpecialistPassword(char *name, char *password) {
+void updateSpecialistPassword(char *username, char *password) {
     MYSQL connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "UPDATE %s.specialist SET password = \"%s\" where name = \"%s\";", DATABASE_NAME, password, name);
+    sprintf(query, "UPDATE %s.specialist SET password = \"%s\" where username = \"%s\";", DATABASE_NAME, password, uesrname);
 
     makeQuery(connection, query);
 
