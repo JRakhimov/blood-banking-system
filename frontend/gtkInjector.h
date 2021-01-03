@@ -2,7 +2,6 @@
 #define GTK_INJECTOR_H
 
 static GtkBuilder *builder;
-static GtkWidget *initPage;
+static GtkWidget *initialWindow;
 
 #endif
-
