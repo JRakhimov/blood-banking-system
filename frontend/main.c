@@ -1,7 +1,10 @@
 #include "windowsInjector.h"
+#include "socket/socketClient.h"
 
 int main(int argc, char *argv[]) {
-	// initSocket(); // initialize socket connection
+	setbuf(stdout, NULL);
+
+	initSocket();
 	gtk_init(&argc, &argv);
 	
 	injectViews();

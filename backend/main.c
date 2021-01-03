@@ -2,5 +2,7 @@
 #include "utils/bootstrap/bootstrap.c"
 
 int main() {
-    return startServer();
+  setbuf(stdout, NULL);
+
+  return startServer();
 }

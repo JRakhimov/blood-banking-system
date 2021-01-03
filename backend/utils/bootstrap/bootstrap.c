@@ -1,6 +1,7 @@
 #include "bootstrap_injection.h"
 #include "../clients_injection.h"
 #include "../../entities/system/request.h"
+#include "../../router/router.h"
 
 int startServer();
 
@@ -149,12 +150,10 @@ int handleConnections()
                  ntohs(address.sin_port));
 
           // closeUserSession(&clients[i]);
-        }
-        else
-        {
+        } else {
           /** Handle incoming request */
           if (handleRequest(&clients[i], &request))
-              fprintf(stderr, "Failed to handle request");
+            fprintf(stderr, "Failed to handle request");
         }
       }
     }
