@@ -4,11 +4,11 @@
 #include "../connector.h"
 #include "../../entities/specialist.h"
 
-void insertNewSpecialist(int id, char *username, char *password) {
+void insertNewSpecialist(int id, char *username, char *name, char *password) {
     MYSQL connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "INSERT INTO %s.specialist (id, username, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, username, password);
+    sprintf(query, "INSERT INTO %s.specialist (id, username, name, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, username, name, password);
     printf("%s\n", query);
 
     makeQuery(connection, query);
@@ -69,7 +69,7 @@ void updateSpecialistPassword(char *username, char *password) {
     closeConnection(connection);
 }
 
-int validSpecialist(char *name, char *password) {
+int validSpecialist(char *username, char *password) {
     MYSQL connection = connectDatabase();
 
     //variable definnition
@@ -80,7 +80,7 @@ int validSpecialist(char *name, char *password) {
     char *DBname;
     char *DBpassword; // in future will be used for password
 
-    char *userName = name;
+    char *username = username;
     char *userPassword = password;
 
     int nameStatus = 0;
@@ -90,7 +90,7 @@ int validSpecialist(char *name, char *password) {
     //#####
 
     //Extracting name email(password) and validate with input
-    sprintf(query1, "SELECT name,password FROM %s.specialist", DATABASE_NAME);
+    sprintf(query1, "SELECT username,password FROM %s.specialist", DATABASE_NAME);
 
     mysql_query(connection, query1);
 
@@ -100,7 +100,7 @@ int validSpecialist(char *name, char *password) {
         DBname = row[0];
         DBpassword = row[1];
 
-        if (isEqual(DBname, userName)) {
+        if (isEqual(DBname, username)) {
             nameStatus = 1;
             if (isEqual(DBpassword, userPassword)) {
                 passwordStatus = 1;
