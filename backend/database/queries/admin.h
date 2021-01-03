@@ -4,12 +4,11 @@
 #include "../connector.h"
 #include "../../entities/admin.h"
 
-void insertNewAdmin(int id, char *username, char *password)
-{
+void insertNewAdmin(int id, char *username, char *name, char *password){
     MYSQL connection = connectDatabase();
-    
     char query[100];
-    sprintf(query, "INSERT INTO %s.admin (id,name,password) VALUES(%d,\"%s\",\"%s\");",DATABASE_NAME,id,username,password);
+    
+    sprintf(query, "INSERT INTO %s.admin (id,username,name,password) VALUES(%d,\"%s\",\"%s\");",DATABASE_NAME,id,username,name,password);
     printf("%s\n",query);
     
     makeQuery(connection, query);
@@ -28,7 +27,7 @@ Admin selectAdminByName(char *username){
     MYSQL_ROW row;
     char query[100];
 
-    sprintf(query, "SELECT * FROM %s.admin where name = \"%s\";", DATABASE_NAME, username);
+    sprintf(query, "SELECT * FROM %s.admin where username = \"%s\";", DATABASE_NAME, username);
 
     
 
@@ -52,7 +51,7 @@ void deleteAdminByName(char *username){
 
     char query[100];
 
-    sprintf(query, "DELETE from %s.admin where name = \"%s\";", DATABASE_NAME ,username); 
+    sprintf(query, "DELETE from %s.admin where username = \"%s\";", DATABASE_NAME ,username); 
     makeQuery(connection, query);
 
     printf("Deletion was successful\n");
@@ -64,14 +63,14 @@ void updateAdminPassword(char *username, char *password){
     MYSQL connection = connectDatabase();
     char query[100];
     
-    sprintf(query, "UPDATE %s.admin SET password = \"%s\" where name = \"%s\";", DATABASE_NAME, password,username);
+    sprintf(query, "UPDATE %s.admin SET password = \"%s\" where username = \"%s\";", DATABASE_NAME, password,username);
     makeQuery(connection, query);
 
     printf("Update was successful\n");
     closeConnection(connection);
 }
 
-int validAdmin( char *name, char *password){
+int validAdmin( char *username, char *password){
 
     MYSQL connection = connectDatabase();
 
@@ -84,7 +83,7 @@ int validAdmin( char *name, char *password){
     char *DBpassword; // in future will be used for password
 
 
-    char *username = name;
+    char *username = username;
     char *userPassword = password;
 
     int nameStatus = 0;
@@ -95,7 +94,7 @@ int validAdmin( char *name, char *password){
 
 
     //Extracting name email(password) and validate with input
-    sprintf(query1, "SELECT name,password FROM %s.admin", DATABASE_NAME);
+    sprintf(query1, "SELECT username,password FROM %s.admin", DATABASE_NAME);
 
     mysql_query(connection,query1);
 
