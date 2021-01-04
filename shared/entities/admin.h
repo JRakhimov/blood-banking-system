@@ -3,8 +3,8 @@
 
 struct Admin {
   int id;
-  char *username;
-  char *password;
+  char username[512];
+  char password[512];
 };
 
 #endif

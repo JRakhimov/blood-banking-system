@@ -3,9 +3,9 @@
 
 struct Record {
   int id;
-  char *phone_number;
-  char *date;
-  char *action;
+  char phone_number[512];
+  char date[512];
+  char action[512];
 };
 
 #endif

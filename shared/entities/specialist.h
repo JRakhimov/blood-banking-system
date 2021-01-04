@@ -3,9 +3,9 @@
 
 struct Specialist {
   int id;
-  char *name;
-  char *username;
-  char *password;
+  char name[512];
+  char username[512];
+  char password[512];
 };
 
 #endif
