@@ -1,7 +1,7 @@
 #ifndef CLIENTS_INJECTION_H
 #define CLIENTS_INJECTION_H
 
-#include "../entities/system/client.h"
+#include "../../shared/entities/system/client.h"
 
 #define MAX_ALLOWED_CLIENTS 10
 
@@ -27,6 +27,22 @@ struct Client getClientByPhone(char *phone) {
       return clients[i];
     }
   }
+}
+
+int startUserSession(struct Client *client, struct User user) {
+  client->user = user;
+  return EXIT_SUCCESS;
+}
+
+int closeUserSession(struct Client *client) {
+  struct User user;
+
+  client->user = user;
+
+  close(client->socket);
+  client->socket = 0;
+
+  return EXIT_SUCCESS;
 }
 
 #endif

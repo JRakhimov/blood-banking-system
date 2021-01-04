@@ -5,6 +5,9 @@
 
 struct Request {
   struct Route route;
+
+  char phoneNumber[256];
+  char password[256];
 };
 
 #endif

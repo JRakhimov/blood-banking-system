@@ -6,3 +6,5 @@ int main() {
 
   return startServer();
 }
+
+// gcc main.c $(mysql_config --libs) -o main $(mysql_config --cflags)

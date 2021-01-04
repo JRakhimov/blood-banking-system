@@ -2,11 +2,10 @@
 #define SPECIALIST_QUERIES_H
 
 #include "../connector.h"
-#include "../../entities/user.h"
+#include "../../../shared/entities/entities.h"
 
 void insertNewUser(int id,char *phone_number, char *password,char *name, char *date, char *bloodType, char *validStatus, char *userStatus){
-    
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[300];
 
@@ -21,9 +20,8 @@ void insertNewUser(int id,char *phone_number, char *password,char *name, char *d
     closeConnection(connection);
 }
 
-User selectUserByPhoneNumber(char *phone){
-
-    MYSQL connection = connectDatabase();
+struct User selectUserByPhoneNumber(char *phone){
+    MYSQL *connection = connectDatabase();
 
     struct User user;
 
@@ -38,13 +36,14 @@ User selectUserByPhoneNumber(char *phone){
     res = mysql_store_result(connection);
     while(row  = mysql_fetch_row(res)){
         user.id = atoi(row[0]);
-        user.phone_number = row[1];
-        user.password = row[2];
-        user.name = row[3];
-        user.date = row[4];
-        user.bloodType= row[5];
-        user.validStatus=row[6];
-        user.UserStatus=row[7];
+
+        sprintf(user.phoneNumber, "%s", row[1]);
+        sprintf(user.password, "%s", row[2]);
+        sprintf(user.name, "%s", row[3]);
+        sprintf(user.date, "%s", row[4]);
+        sprintf(user.bloodType, "%s", row[5]);
+        sprintf(user.validStatus, "%s", row[6]);
+        sprintf(user.userStatus, "%s", row[7]);
     }
     mysql_free_result(res);
     closeConnection(connection);
@@ -52,8 +51,7 @@ User selectUserByPhoneNumber(char *phone){
 }
 
 void deleteUserByPhoneNumber(char *phone){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
 
@@ -65,8 +63,7 @@ void deleteUserByPhoneNumber(char *phone){
 }
 
 void updateUser(char *phone_number, char *password,char *name, char *date, char *bloodType, char *validStatus, char *userStatus){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[300];
 
@@ -80,8 +77,7 @@ void updateUser(char *phone_number, char *password,char *name, char *date, char 
 }
 
 void updateUserBloodType(char *phone_number,char *bloodType){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
 
@@ -95,11 +91,10 @@ void updateUserBloodType(char *phone_number,char *bloodType){
 }
 
 void updateUserValidStatus(char *phone_number,char *status){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
     char query[100];
 
-    if((IsEqual(status,"Approved") ||(IsEqual(status,"Not Approved")))){
+    if((isEqual(status,"Approved") ||(isEqual(status,"Not Approved")))){
         sprintf(query, "UPDATE %s.dr_user SET validstatus = \"%s\" where phone_number = \"%s\";", DATABASE_NAME, status, phone_number);
  
         makeQuery(connection, query);
@@ -115,12 +110,11 @@ void updateUserValidStatus(char *phone_number,char *status){
 }
 
 void updateUserUserStatus(char *phone_number,char *status){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
 
-    if((IsEqual(status,"Donor") || (IsEqual(status,"Recipient")))){
+    if((isEqual(status,"Donor") || (isEqual(status,"Recipient")))){
         sprintf(query, "UPDATE %s.dr_user SET userstatus = \"%s\" where phone_number = \"%s\";", DATABASE_NAME, status, phone_number);
 
         makeQuery(connection, query);
@@ -135,18 +129,16 @@ void updateUserUserStatus(char *phone_number,char *status){
 
 }
 
-int validUser( char *phone_number, char *password){
-
-    MYSQL connection = connectDatabase();
+int validUser(char *phone_number, char *password){
+    MYSQL *connection = connectDatabase();
 
     //variable definnition
     MYSQL_RES *res;
     MYSQL_ROW row;
 
-    char query1[100];
+    char query[100];
     char *DBphone_number;
     char *DBpassword; // in future will be used for password
-
 
     char *phoneNum = phone_number;
     char *userPassword = password;
@@ -155,11 +147,10 @@ int validUser( char *phone_number, char *password){
     int passwordStatus = 0;
     int status = 0; // return 1 if true, 0 if false
 
-
     //Extracting name email(password) and validate with input
     sprintf(query, "SELECT phone_number,password FROM %s.dr_user", DATABASE_NAME);
 
-    mysql_query(connection,query);
+    mysql_query(connection, query);
 
     res = mysql_store_result(connection);
 
@@ -167,9 +158,9 @@ int validUser( char *phone_number, char *password){
         DBphone_number = row[0];
         DBpassword= row[1];
 
-        if(IsEqual(DBphone_number,phoneNum)){
+        if(isEqual(DBphone_number,phoneNum)){
             phoneNumberStatus=1;
-            if(IsEqual(DBpassword, userPassword)){
+            if(isEqual(DBpassword, userPassword)){
                 passwordStatus=1;
                 break;
             }
@@ -194,17 +185,19 @@ int validUser( char *phone_number, char *password){
     }
   
     closeConnection(connection);
+
     return status;
 }
 
-User* getAllUsers(){
-
-    MYSQL connection = connectDatabase();
+struct User* getAllUsers(){
+    MYSQL *connection = connectDatabase();
 
     struct User users[4096];
     MYSQL_RES *res;
     MYSQL_ROW row;
-    char *query = "SELECT * FROM %s.dr_user;", DATABASE_NAME);
+    char query[100];
+
+    sprintf(query, "SELECT * FROM %s.dr_user;", DATABASE_NAME);
     
     int i=0;
 
@@ -213,13 +206,14 @@ User* getAllUsers(){
     res = mysql_store_result(connection);
     while(row  = mysql_fetch_row(res)){
         users[i].id = atoi(row[0]);
-        users[i].phoneNumber = row[1];
-        users[i].password = row[2];
-        users[i].name = row[3];
-        users[i].date = row[4];
-        users[i].bloodType = row[5];
-        users[i].validStatus = row[6];
-        users[i].userStatus = row[7];
+
+        sprintf(users[i].phoneNumber, "%s", row[1]);
+        sprintf(users[i].password, "%s", row[2]);
+        sprintf(users[i].name, "%s", row[3]);
+        sprintf(users[i].date, "%s", row[4]);
+        sprintf(users[i].bloodType, "%s", row[5]);
+        sprintf(users[i].validStatus, "%s", row[6]);
+        sprintf(users[i].userStatus, "%s", row[7]);
         i++;
     }
     i = 0;

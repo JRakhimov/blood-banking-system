@@ -2,7 +2,7 @@
 #define SPECIALIST_QUERIES_H
 
 #include "../connector.h"
-#include "../../entities/specialist.h"
+#include "../../../shared/entities/specialist.h"
 
 void insertNewSpecialist(int id, char *username, char *name, char *password) {
     MYSQL connection = connectDatabase();

@@ -15,6 +15,22 @@
 
 static int socketClientId;
 
+int sendAll(int fd, void *buf, int n, int flags) {
+  int temp, total = 0;
+
+  while (total < n) {
+    temp = send(fd, buf + total, n - total, flags);
+
+    if (temp == -1) {
+      break;
+    }
+
+    total += temp;
+  }
+
+  return temp == -1 ? -1 : total;
+}
+
 void closeSocketConnection() {
   close(socketClientId);
 }

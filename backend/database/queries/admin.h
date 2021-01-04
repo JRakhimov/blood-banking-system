@@ -2,7 +2,7 @@
 #define ADMIN_QUERIES_H
 
 #include "../connector.h"
-#include "../../entities/admin.h"
+#include "../../../shared/entities/admin.h"
 
 void insertNewAdmin(int id, char *username, char *name, char *password){
     MYSQL connection = connectDatabase();
@@ -104,9 +104,9 @@ int validAdmin( char *username, char *password){
         DBname = row[0];
         DBpassword= row[1];
 
-        if( IsEqual(DBname, username) ){
+        if( isEqual(DBname, username) ){
             nameStatus = 1;
-            if( IsEqual(DBpassword,UserPassword) ){
+            if( isEqual(DBpassword,UserPassword) ){
                 passwordStatus=1;
                 break;
             }

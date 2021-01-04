@@ -3,9 +3,13 @@
 
 #include <stdio.h>
 
-#include "../entities/system/client.h"
-#include "../entities/system/request.h"
-#include "../entities/system/response.h"
+#include "../../shared/routes.h"
+
+#include "../../shared/entities/system/client.h"
+#include "../../shared/entities/system/request.h"
+#include "../../shared/entities/system/response.h"
+
+#include "../controllers/auth.h"
 
 /** Function Declarations */
 int handleRequest(struct Client *client, struct Request *request);
@@ -19,7 +23,24 @@ int handleRequest(struct Client *client, struct Request *request) {
   struct Response response;
   struct Route route = request->route;
 
+  if (strcmp(route.module, AUTH_MODULE) == 0) {
+    if (strcmp(route.method, USER_LOGIN_METHOD) == 0) {
+      return sendResponse(client->socket, userLogin(client, *request));
+    }
+  }
+
   return EXIT_SUCCESS;
+}
+
+int sendResponse(int socket, struct Response response) {
+  int size = sizeof(response);
+
+  if (sendAll(socket, &response, size, 0)) {
+    return EXIT_SUCCESS;
+  }
+
+  fprintf(stderr, "Failed to send response");
+  return EXIT_FAILURE;
 }
 
 int sendAll(int fd, void *buf, int n, int flags) {
@@ -36,15 +57,6 @@ int sendAll(int fd, void *buf, int n, int flags) {
   }
 
   return temp == -1 ? -1 : total;
-}
-
-int sendResponse(int sd, struct Response response) {
-    int size = sizeof(response);
-    if (sendAll(sd, &response, size, 0))
-        return EXIT_SUCCESS;
-
-    fprintf(stderr, "Failed to send response");
-    return EXIT_FAILURE;
 }
 
 #endif

@@ -2,8 +2,8 @@
 #define ADMIN_QUERIES_H
 
 #include "../connector.h"
-#include "../../entities/record.h"
-#include "../../entities/user.h"
+#include "../../../shared/entities/record.h"
+#include "../../shared/entities/user.h"
 
 void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction)
 {

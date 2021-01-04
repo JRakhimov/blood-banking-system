@@ -1,16 +1,15 @@
 #ifndef DATABASE_CONNECTOR_H
 #define DATABASE_CONNECTOR_H
 
-#include <stdio.h>
 #include <mysql/mysql.h>
+#include <stdio.h>
 
 #define DATABASE_HOST "localhost"
 #define DATABASE_NAME "os"
-#define DATABASE_URER "root"
-#define DATABSE_PASSWORD "root"
+#define DATABASE_USER "admin"
+#define DATABSE_PASSWORD "admin"
 
 // Functions declarations
-
 MYSQL *connectDatabase();
 
 void closeConnection(MYSQL *connection);
@@ -20,14 +19,13 @@ void makeQuery(MYSQL *connection, char *query);
 int isEqual(char *string1, char *string2);
 
 // Functions implementations
-
 MYSQL *connectDatabase() {
   MYSQL *connection = mysql_init(NULL);
 
   printf("Connecting to database:\n");
 
   // check if connection to data base was successfull
-  if(!(mysql_real_connect(connection, DATABASE_HOST, DATABASE_URER, DATABSE_PASSWORD, DATABASE_NAME, 0, NULL, 0))){
+  if(!(mysql_real_connect(connection, DATABASE_HOST, DATABASE_USER, DATABSE_PASSWORD, DATABASE_NAME, 0, NULL, 0))){
       fprintf(stderr,"\nError:  %s [%d] \n", mysql_error(connection), mysql_errno(connection));
       exit(1);
   }

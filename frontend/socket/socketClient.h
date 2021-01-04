@@ -4,7 +4,8 @@
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 8080
 
-#include "socketDependencies.h"
+#include "socketInjector.h"
+
 struct sockaddr_in serverAddress;
 
 int initSocket() {
