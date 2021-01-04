@@ -13,10 +13,10 @@ void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction) {
         sprintf(query, "INSERT INTO %s.history (id,phone_number,dateofaction,typeofaction) VALUES(%d,\"%s\",NOW(),\"%s\");", DATABASE_NAME,id,phone_number,typeOfAction);
         makeQuery(connection, query);
         printf("Insertion was successful\n");
-    }
-    else{
+    } else {
         printf("Invalid insertion parameters");
     }
+    
     closeConnection(connection);
 }
 

@@ -9,7 +9,6 @@ struct User {
   char date[512];
   char bloodType[512];
   char validStatus[512];
-  char userStatus[512];
 };
 
 #endif

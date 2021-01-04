@@ -17,7 +17,7 @@ void insertNewSpecialist(int id, char *username, char *name, char *password) {
     closeConnection(connection);
 }
 
-Specialist selectSpecialistByUsername(char *username) {
+struct Specialist selectSpecialistByUsername(char *username) {
     struct Specialist specialist;
 
     MYSQL *connection = connectDatabase();
@@ -61,7 +61,7 @@ void updateSpecialistPassword(char *username, char *password) {
     MYSQL *connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "UPDATE %s.specialist SET password = \"%s\" where username = \"%s\";", DATABASE_NAME, password, uesrname);
+    sprintf(query, "UPDATE %s.specialist SET password = \"%s\" where username = \"%s\";", DATABASE_NAME, password, username);
 
     makeQuery(connection, query);
 
@@ -79,9 +79,6 @@ int validSpecialist(char *username, char *password) {
     char query1[100];
     char *DBname;
     char *DBpassword; // in future will be used for password
-
-    char *username = username;
-    char *userPassword = password;
 
     int nameStatus = 0;
     int passwordStatus = 0;
@@ -102,7 +99,7 @@ int validSpecialist(char *username, char *password) {
 
         if (isEqual(DBname, username)) {
             nameStatus = 1;
-            if (isEqual(DBpassword, userPassword)) {
+            if (isEqual(DBpassword, password)) {
                 passwordStatus = 1;
                 break;
             } else {

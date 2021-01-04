@@ -20,6 +20,10 @@ static void on_user_login_button_clicked(void) {
   const char* phone = gtk_entry_get_text(userLoginPhoneInput);
   const char* pass = gtk_entry_get_text(userLoginPasswordInput);
 
+  if (strlen(phone) == 0 || strlen(pass) == 0) {
+    return;
+  }
+
   printf("Phone: %s\n", phone);
   printf("Password: %s\n", pass);
 
@@ -33,11 +37,16 @@ static void on_user_login_button_clicked(void) {
   sprintf(request.password, "%s", pass);
 
   sendAll(socketClientId, &request, sizeof(request), 0);
-
   recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
 
-  printf("[LOGIN] Status: %d", response.status);
-  printf("[LOGIN] name: %s", response.data.user.name);
+  printf("[USER_LOGIN] Status: %d\n", response.status);
+
+  // if auth success
+  if (response.status == 1) {
+
+  } else {
+
+  }
 }
 
 void initUserLoginWindow() {

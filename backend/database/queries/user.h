@@ -1,16 +1,16 @@
-#ifndef SPECIALIST_QUERIES_H
-#define SPECIALIST_QUERIES_H
+#ifndef USER_QUERIES_H
+#define USER_QUERIES_H
 
 #include "../connector.h"
 #include "../../../shared/entities/entities.h"
 
-void insertNewUser(int id,char *phone_number, char *password,char *name, char *date, char *bloodType, char *validStatus, char *userStatus){
+void insertNewUser(char *phone_number, char *password,char *name, char *date, char *bloodType, char *validStatus){
     MYSQL *connection = connectDatabase();
 
     char query[300];
 
-    sprintf(query, "INSERT INTO %s.dr_user (id,phone_number,password,name,dateofbirth,bloodtype,validstatus,userstatus) VALUES(%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\");",
-    DATABASE_NAME, id,phone_number,password,name,date,bloodType,validStatus,userStatus);
+    sprintf(query, "INSERT INTO %s.dr_user (phone_number,password,name,dateofbirth,bloodtype,validstatus) VALUES(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\");",
+    DATABASE_NAME, phone_number,password,name,date,bloodType,validStatus);
    
     printf("%s\n",query);
     
@@ -43,7 +43,6 @@ struct User selectUserByPhoneNumber(char *phone){
         sprintf(user.date, "%s", row[4]);
         sprintf(user.bloodType, "%s", row[5]);
         sprintf(user.validStatus, "%s", row[6]);
-        sprintf(user.userStatus, "%s", row[7]);
     }
     mysql_free_result(res);
     closeConnection(connection);
@@ -62,13 +61,13 @@ void deleteUserByPhoneNumber(char *phone){
     closeConnection(connection);
 }
 
-void updateUser(char *phone_number, char *password,char *name, char *date, char *bloodType, char *validStatus, char *userStatus){
+void updateUser(char *phone_number, char *password,char *name, char *date, char *bloodType, char *validStatus){
     MYSQL *connection = connectDatabase();
 
     char query[300];
 
-    sprintf(query, "UPDATE %s.dr_user SET password = \"%s\", name = \"%s\",dateofbirth= \"%s\", bloodtype = \"%s\",validstatus = \"%s\",userstatus=\"%s\" where phone_number = \"%s\";",
-    DATABASE_NAME, password, name, date, bloodType, validStatus, userStatus, phone_number);
+    sprintf(query, "UPDATE %s.dr_user SET password = \"%s\", name = \"%s\",dateofbirth= \"%s\", bloodtype = \"%s\",validstatus = \"%s\" where phone_number = \"%s\";",
+    DATABASE_NAME, password, name, date, bloodType, validStatus, phone_number);
 
     makeQuery(connection, query);
 
@@ -213,7 +212,6 @@ struct User* getAllUsers(){
         sprintf(users[i].date, "%s", row[4]);
         sprintf(users[i].bloodType, "%s", row[5]);
         sprintf(users[i].validStatus, "%s", row[6]);
-        sprintf(users[i].userStatus, "%s", row[7]);
         i++;
     }
     i = 0;

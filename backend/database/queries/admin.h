@@ -17,7 +17,7 @@ void insertNewAdmin(int id, char *username, char *name, char *password){
     closeConnection(connection);
 }
 
-Admin selectAdminByName(char *username){
+struct Admin selectAdminByName(char *username){
     MYSQL *connection = connectDatabase();
 
     struct Admin admin;
@@ -78,10 +78,6 @@ int validAdmin( char *username, char *password){
     char *DBname;
     char *DBpassword; // in future will be used for password
 
-
-    char *username = username;
-    char *userPassword = password;
-
     int nameStatus = 0;
     int passwordStatus = 0;
     int status = 0; // return 1 if true, 0 if false
@@ -102,7 +98,7 @@ int validAdmin( char *username, char *password){
 
         if( isEqual(DBname, username) ){
             nameStatus = 1;
-            if( isEqual(DBpassword, userPassword) ){
+            if( isEqual(DBpassword, password) ){
                 passwordStatus=1;
                 break;
             }

@@ -23,9 +23,21 @@ int handleRequest(struct Client *client, struct Request *request) {
   struct Response response;
   struct Route route = request->route;
 
+  printf("here");
+
+  printf("Method: %s\n", route.method);
+
   if (strcmp(route.module, AUTH_MODULE) == 0) {
     if (strcmp(route.method, USER_LOGIN_METHOD) == 0) {
       return sendResponse(client->socket, userLogin(client, *request));
+    }
+
+    if (strcmp(route.method, USER_REGISTRATION_METHOD) == 0) {
+      return sendResponse(client->socket, userRegistration(client, *request));
+    }
+
+    if (strcmp(route.method, ADMIN_LOGIN_METHOD) == 0) {
+      return sendResponse(client->socket, adminLogin(client, *request));
     }
   }
 

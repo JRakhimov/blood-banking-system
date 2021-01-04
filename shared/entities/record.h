@@ -3,9 +3,12 @@
 
 struct Record {
   int id;
-  char phone_number[512];
+  int user_id;
+
+  char bloodType[512];
   char date[512];
-  char action[512];
+  char action[512]; // donor or recepient 
+  char status[512]; // approved or not
 };
 
 #endif
