@@ -5,7 +5,7 @@
 #include "../../../shared/entities/admin.h"
 
 void insertNewAdmin(int id, char *username, char *name, char *password){
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
     char query[100];
     
     sprintf(query, "INSERT INTO %s.admin (id,username,name,password) VALUES(%d,\"%s\",\"%s\");",DATABASE_NAME,id,username,name,password);
@@ -18,8 +18,7 @@ void insertNewAdmin(int id, char *username, char *name, char *password){
 }
 
 Admin selectAdminByName(char *username){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     struct Admin admin;
 
@@ -29,15 +28,14 @@ Admin selectAdminByName(char *username){
 
     sprintf(query, "SELECT * FROM %s.admin where username = \"%s\";", DATABASE_NAME, username);
 
-    
-
     mysql_query(connection, query);
 
     res = mysql_store_result(connection);
     while(row  = mysql_fetch_row(res)){
         admin.id = atoi(row[0]);
-        admin.name = row[1];
-        admin.password = row[2];
+        
+        sprintf(admin.username, "%s", row[1]);
+        sprintf(admin.password, "%s", row[2]);
     }
 
     mysql_free_result(res);
@@ -47,7 +45,7 @@ Admin selectAdminByName(char *username){
 }
 
 void deleteAdminByName(char *username){
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
 
@@ -59,8 +57,7 @@ void deleteAdminByName(char *username){
 }
 
 void updateAdminPassword(char *username, char *password){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
     char query[100];
     
     sprintf(query, "UPDATE %s.admin SET password = \"%s\" where username = \"%s\";", DATABASE_NAME, password,username);
@@ -71,8 +68,7 @@ void updateAdminPassword(char *username, char *password){
 }
 
 int validAdmin( char *username, char *password){
-
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     //variable definnition
     MYSQL_RES *res;
@@ -106,7 +102,7 @@ int validAdmin( char *username, char *password){
 
         if( isEqual(DBname, username) ){
             nameStatus = 1;
-            if( isEqual(DBpassword,UserPassword) ){
+            if( isEqual(DBpassword, userPassword) ){
                 passwordStatus=1;
                 break;
             }

@@ -6,5 +6,7 @@
 
 // Methods
 #define USER_LOGIN_METHOD "userLogin"
+#define USER_REGISTRATION_METHOD "userRegistration"
+#define ADMIN_LOGIN_METHOD "adminLogin"
 
 #endif

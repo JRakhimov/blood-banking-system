@@ -5,7 +5,7 @@
 #include "../../../shared/entities/specialist.h"
 
 void insertNewSpecialist(int id, char *username, char *name, char *password) {
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
     sprintf(query, "INSERT INTO %s.specialist (id, username, name, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, username, name, password);
@@ -20,7 +20,7 @@ void insertNewSpecialist(int id, char *username, char *name, char *password) {
 Specialist selectSpecialistByUsername(char *username) {
     struct Specialist specialist;
 
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
     sprintf(query, "SELECT * FROM %s.specialist where username = \"%s\";", DATABASE_NAME, username);
@@ -31,12 +31,12 @@ Specialist selectSpecialistByUsername(char *username) {
     mysql_query(connection, query);
 
     res = mysql_store_result(connection);
-    while (row = mysql_fetch_row(res))
-    {
+    while (row = mysql_fetch_row(res)) {
         specialist.id = atoi(row[0]);
-        specialist.name = row[1];
-        specialist.username = row[2];
-        specialist.password = row[3];
+
+        sprintf(specialist.name, "%s", row[1]);
+        sprintf(specialist.username, "%s", row[2]);
+        sprintf(specialist.password, "%s", row[3]);
     }
 
     mysql_free_result(res);
@@ -46,7 +46,7 @@ Specialist selectSpecialistByUsername(char *username) {
 }
 
 void deleteSpecialistByName(char *username) {
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
     char query[100];
     
     sprintf(query, "DELETE from %s.specialist where username = \"%s\";", DATABASE_NAME, username);
@@ -58,7 +58,7 @@ void deleteSpecialistByName(char *username) {
 }
 
 void updateSpecialistPassword(char *username, char *password) {
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     char query[100];
     sprintf(query, "UPDATE %s.specialist SET password = \"%s\" where username = \"%s\";", DATABASE_NAME, password, uesrname);
@@ -70,7 +70,7 @@ void updateSpecialistPassword(char *username, char *password) {
 }
 
 int validSpecialist(char *username, char *password) {
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
 
     //variable definnition
     MYSQL_RES *res;

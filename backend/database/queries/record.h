@@ -5,9 +5,8 @@
 #include "../../../shared/entities/record.h"
 #include "../../shared/entities/user.h"
 
-void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction)
-{
-    MYSQL connection = connectDatabase();
+void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction) {
+    MYSQL *connection = connectDatabase();
     char query[300];
 
     if((isEqual(typeOfAction,"Donor") ||(isEqual(typeOfAction,"Recipient")))){
@@ -22,8 +21,7 @@ void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction)
 }
 
 void deleteHistoryRecord( char *phone_number){
-    
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
     char query[300];
 
         sprintf(query, "delete from %s.history where phone_number= \"%s\";", DATABASE_NAME, phone_number);
@@ -34,8 +32,7 @@ void deleteHistoryRecord( char *phone_number){
 }
 
 Record* selectHistoryRecords(char *phone_number, Record array[]){
-    
-    MYSQL connection = connectDatabase();
+    MYSQL *connection = connectDatabase();
     MYSQL_RES *res;
     MYSQL_ROW row;
     char query[100];
@@ -54,12 +51,14 @@ Record* selectHistoryRecords(char *phone_number, Record array[]){
 
     while(row = mysql_fetch_row(res)) {
         records[i].id = atoi(row[0]);
-        records[i].phone_number = row[1];
-        records[i].date = row[2];
-        records[i].action = row[3];
+
+        sprintf(records[i].phone_number, "%s", row[1]);
+        sprintf(records[i].date, "%s", row[2]);
+        sprintf(records[i].action, "%s", row[3]);
         
         i++;
     }
+
     i=0;
     mysql_free_result(res); // free result set
     closeConnection(connection); // close connection
