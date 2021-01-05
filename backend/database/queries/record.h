@@ -5,26 +5,68 @@
 #include "../../../shared/entities/record.h"
 #include "../../shared/entities/user.h"
 
-// Get only can be taken blood
-// SELECT * FROM os.record WHERE taker_id IS NULL AND action = "donor" AND status = "approved" LIMIT 1;
+void getUserHistory(int userId) {
+    MYSQL *connection = connectDatabase();
+    char query[300];
 
-// Get history of bloods for user by phone
-// SELECT * FROM os.record WHERE donor_id = (SELECT id FROM os.dr_user WHERE phone_number = "+998935555556") OR taker_id = (SELECT id FROM os.dr_user WHERE phone_number = "+998935555556");
+    sprintf(query, "SELECT * FROM %s.record WHERE donor_id = %d OR taker_id = %d;", DATABASE_NAME, userId);
 
-// Get bloods to analyze
-// SELECT * FROM os.record WHERE action = "analysis" AND status = "pending" AND taker_id IS NULL;
+    closeConnection(connection);
+}
 
-// Take analyses
-// INSERT INTO os.record (donor_id, action, status, date) VALUES((SELECT id from os.dr_user where phone_number = "+998935555556"), "analysis", "pending", NOW());
+void getCanBeTakenBloodByType(char *type) {
+    MYSQL *connection = connectDatabase();
+    char query[300];
 
-// Donate blood
-// INSERT INTO os.record (donor_id, blood_type, action, status, date) VALUES(7, "A+", "donor", "approved", NOW());
+    sprintf(query, "SELECT * FROM %s.record WHERE blood_type = \"%s\" taker_id IS NULL AND action = \"donor\" AND status = \"approved\" LIMIT 1;", DATABASE_NAME, type);
 
-// Take blood (set taker)
-// UPDATE os.record SET taker_id = 5 WHERE id = 2;
+    closeConnection(connection);
+}
 
-// Set analyze result
-// UPDATE os.record SET blood_type = "B+", status = "approved" WHERE id = 2;
+void getBloodsToAnalyze() {
+    MYSQL *connection = connectDatabase();
+    char query[300];
+
+    sprintf(query, "SELECT * FROM %s.record WHERE action = \"analysis\" AND status = \"pending\" AND taker_id IS NULL;", DATABASE_NAME);
+
+    closeConnection(connection);
+}
+
+void takeAnalysis(int userId) {
+    MYSQL *connection = connectDatabase();
+    char query[300];
+
+    sprintf(query, "INSERT INTO %s.record (donor_id, action, status, date) VALUES(%d, \"analysis\", \"pending\", NOW());", DATABASE_NAME, userId);
+
+    closeConnection(connection);
+}
+
+void donateBlood(int userId, char *type) {
+    MYSQL *connection = connectDatabase();
+    char query[300];
+
+    sprintf(query, "INSERT INTO %s.record (donor_id, blood_type, action, status, date) VALUES(%d, \"%s\", \"donor\", \"approved\", NOW());", DATABASE_NAME, userId, type);
+
+    closeConnection(connection);
+}
+
+void takeBlood(int recordId, int takerId) {
+    MYSQL *connection = connectDatabase();
+    char query[300];
+
+    sprintf(query, "UPDATE %s.record SET taker_id = %d WHERE id = %d;", DATABASE_NAME, takerId, recordId);
+
+    closeConnection(connection);
+}
+
+void setAnalisysResult(int recordId, char *status, char *type) {
+    MYSQL *connection = connectDatabase();
+    char query[300];
+    
+    sprintf(query, "UPDATE %s.record SET blood_type = \"%s\", status = \"%s\" WHERE id = %d;", DATABASE_NAME, type, status, recordId);
+
+    closeConnection(connection);
+}
 
 void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction) {
     MYSQL *connection = connectDatabase();
