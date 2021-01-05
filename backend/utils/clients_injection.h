@@ -34,10 +34,29 @@ int startUserSession(struct Client *client, struct User user) {
   return EXIT_SUCCESS;
 }
 
-int closeUserSession(struct Client *client) {
-  struct User user;
+int startAdminSession(struct Client *client, struct Admin admin) {
+  client->admin = admin;
+  return EXIT_SUCCESS;
+}
 
-  client->user = user;
+int startSpecialistSession(struct Client *client, struct Specialist specialist) {
+  client->specialist = specialist;
+  return EXIT_SUCCESS;
+}
+
+int closeSession(struct Client *client) {
+  struct User user;
+  struct Admin admin;
+  struct Specialist specialist;
+
+  // 0: Admin, 1: Specialist, 2: User
+  if (client->type == 0) {
+    client->admin = admin;
+  } else if (client->type == 1) {
+    client->specialist = specialist;
+  } else if (client->type == 2) {
+    client->user = user;
+  }
 
   close(client->socket);
   client->socket = 0;

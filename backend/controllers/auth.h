@@ -23,6 +23,8 @@ struct Response userLogin(struct Client *client, struct Request request) {
   if (validUser(request.phoneNumber, request.password) == 1) {
     struct User user = selectUserByPhoneNumber(request.phoneNumber);
 
+    startUserSession(client, user);
+
     response.status = 1;
     response.data.user = user;
   } else {
@@ -40,6 +42,8 @@ struct Response userRegistration(struct Client *client, struct Request request) 
     insertNewUser(request.phoneNumber, request.password, request.name, request.date, request.bloodType, request.validStatus);
 
     struct User user = selectUserByPhoneNumber(request.phoneNumber);
+
+    startUserSession(client, user);
 
     response.status = 1;
     response.data.user = user;
@@ -59,6 +63,8 @@ struct Response adminLogin(struct Client *client, struct Request request) {
     if (validAdmin(request.username, request.password) == 1) {
       struct Admin admin = selectAdminByName(request.username);
 
+      startAdminSession(client, admin);
+
       response.status = 1;
       response.data.admin = admin;
     } else {
@@ -68,6 +74,8 @@ struct Response adminLogin(struct Client *client, struct Request request) {
   } else {
     if (validSpecialist(request.username, request.password) == 1) {
       struct Specialist specialist = selectSpecialistByUsername(request.username);
+
+      startSpecialistSession(client, specialist);
 
       response.status = 1;
       response.data.specialist = specialist;

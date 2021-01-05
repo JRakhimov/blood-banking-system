@@ -131,7 +131,7 @@ int handleConnections() {
           printf("Host disconnected , ip %s , port %d \n", inet_ntoa(address.sin_addr),
           ntohs(address.sin_port));
 
-          closeUserSession(&clients[i]);
+          closeSession(&clients[i]);
         } else {
           /** Handle incoming request */
           if (handleRequest(&clients[i], &request))
