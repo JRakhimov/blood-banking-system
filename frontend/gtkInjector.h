@@ -4,6 +4,6 @@
 static GtkBuilder *builder;
 static GtkWidget *initialWindow, *userLoginWindow, *adminLoginWindow, *userRegistrationWindow;
 static GtkWidget *userWindow;
-static char username[512], phone[512];
+static char adminUsername[512], userPhone[512];
 
 #endif

@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 	
 	injectViews();
 
-	gtk_widget_show(userWindow);
+	gtk_widget_show(initialWindow);
 	
 	gtk_main();
 	
