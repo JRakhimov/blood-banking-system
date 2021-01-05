@@ -3,7 +3,8 @@
 
 struct Record {
   int id;
-  int user_id;
+  int donor_id;
+  int taker_id;
 
   char bloodType[512];
   char date[512];

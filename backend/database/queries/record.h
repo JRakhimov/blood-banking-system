@@ -5,6 +5,27 @@
 #include "../../../shared/entities/record.h"
 #include "../../shared/entities/user.h"
 
+// Get only can be taken blood
+// SELECT * FROM os.record WHERE taker_id IS NULL AND action = "donor" AND status = "approved" LIMIT 1;
+
+// Get history of bloods for user by phone
+// SELECT * FROM os.record WHERE donor_id = (SELECT id FROM os.dr_user WHERE phone_number = "+998935555556") OR taker_id = (SELECT id FROM os.dr_user WHERE phone_number = "+998935555556");
+
+// Get bloods to analyze
+// SELECT * FROM os.record WHERE action = "analysis" AND status = "pending" AND taker_id IS NULL;
+
+// Take analyses
+// INSERT INTO os.record (donor_id, action, status, date) VALUES((SELECT id from os.dr_user where phone_number = "+998935555556"), "analysis", "pending", NOW());
+
+// Donate blood
+// INSERT INTO os.record (donor_id, blood_type, action, status, date) VALUES(7, "A+", "donor", "approved", NOW());
+
+// Take blood (set taker)
+// UPDATE os.record SET taker_id = 5 WHERE id = 2;
+
+// Set analyze result
+// UPDATE os.record SET blood_type = "B+", status = "approved" WHERE id = 2;
+
 void insertNewHistoryRecord(int id, char *phone_number, char *typeOfAction) {
     MYSQL *connection = connectDatabase();
     char query[300];
