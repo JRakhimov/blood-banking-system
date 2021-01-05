@@ -1,9 +1,7 @@
 #ifndef AUTH_CONTROLLERS_H
 #define AUTH_CONTROLLERS_H
 
-#include "../../shared/entities/system/response.h"
-#include "../../shared/entities/system/request.h"
-#include "../../shared/entities/user.h"
+#include "../../shared/entities/entities.h"
 
 #include "../database/queries/specialist.h"
 #include "../database/queries/admin.h"
