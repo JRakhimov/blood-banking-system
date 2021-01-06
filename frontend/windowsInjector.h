@@ -10,6 +10,8 @@
 #include "./windows/admin_login.h"
 #include "./windows/user_registration.h"
 #include "./windows/user.h"
+#include "./windows/doctor.h"
+// #include "./windows/admin.h"
 
 extern void injectViews() {
 	builder = gtk_builder_new();
@@ -21,6 +23,8 @@ extern void injectViews() {
 	initUserLoginWindow();
 	initAdminLoginWindow();
 	initUserRegistrationWindow();
+	initDoctorWindow();
+	// initAdminWindow();
 
 	gtk_builder_connect_signals(builder, NULL);
 	g_object_unref(builder);

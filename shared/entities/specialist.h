@@ -6,6 +6,7 @@ struct Specialist {
   char name[512];
   char username[512];
   char password[512];
+  char email[512];
 };
 
 #endif

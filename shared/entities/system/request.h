@@ -13,7 +13,6 @@ struct Request {
   char name[512];
   char date[512];
   char bloodType[512];
-  char validStatus[512];
 };
 
 #endif

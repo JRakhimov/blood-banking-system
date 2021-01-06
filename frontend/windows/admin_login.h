@@ -32,7 +32,8 @@ static void on_admin_login_button_clicked(void) {
 
   // if auth success
   if (response.status == 1) {
-
+	  gtk_widget_hide(adminLoginWindow);
+	  gtk_widget_show(doctorWindow);
   } else {
 
   }

@@ -1,6 +1,8 @@
 #ifndef USER_ENTITY_H
 #define USER_ENTITY_H
 
+#include "record.h"
+
 struct User {
   int id;
   char phoneNumber[512];
@@ -8,7 +10,9 @@ struct User {
   char name[512];
   char date[512];
   char bloodType[512];
-  char validStatus[512];
+  char email[512];
+  char region[512];
+  struct Record lastDonation;
 };
 
 #endif

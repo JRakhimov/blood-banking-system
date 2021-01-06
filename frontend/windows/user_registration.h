@@ -35,7 +35,6 @@ static void on_btn_reg_clicked(void) {
   sprintf(request.date, "%s", birth);
   sprintf(request.name, "%s", name);
   sprintf(request.bloodType, "A+");
-  sprintf(request.validStatus, "pending");
 
   sendAll(socketClientId, &request, sizeof(request), 0);
   recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
