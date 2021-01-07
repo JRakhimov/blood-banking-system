@@ -11,12 +11,9 @@ typedef enum {
   D_T_NUM_COLUMNS
 } Doctor_Column_type;
 
-
 GtkTreeView *treead;
 GtkTreeModel *modelad;
-GtkWidget *insert_button;
-GtkWidget *delete_button;
-GtkWidget *modify_button;
+GtkWidget *refresh_doctor_button;
 GtkWidget *logout_button;
 GtkTreeSelection *selection;
 
@@ -26,41 +23,18 @@ static GtkTreeModel *create_and_fill_doctor_model (struct Record *records) {
 
   store = gtk_list_store_new(5, G_TYPE_INT,G_TYPE_INT,G_TYPE_STRING,G_TYPE_STRING,G_TYPE_STRING);
 
-  gtk_list_store_append(store,&iter);
-  gtk_list_store_set (
-    store,
-    &iter,
-    D_T_ID, records[0].id,
-    D_T_NAME, records[0].donor_id,
-    D_T_BLOODTYPE, records[0].bloodType,
-    D_T_DONATIONDATE, records[0].date,
-    D_T_ACTION, records[0].status,
-    -1
-  );
+  for (int i = 0; i < 10; i++) {
+    if (records[i].id == NULL) {
+      break;
+    }
 
-  gtk_list_store_append(store,&iter);
-  gtk_list_store_set (
-    store,
-    &iter,
-    D_T_ID, records[1].id,
-    D_T_NAME, records[1].donor_id,
-    D_T_BLOODTYPE, records[1].bloodType,
-    D_T_DONATIONDATE, records[1].date,
-    D_T_ACTION, records[1].status,
-    -1
-  );
-
-  printf("1) %ld\n", sizeof(*records));
-  printf("2) %ld\n", sizeof(struct Record));
-
-  for (int i = 0; i < sizeof(records) / sizeof(struct Record); i++) {
     gtk_list_store_append(store,&iter);
     gtk_list_store_set (
       store,
       &iter, D_T_ID,
-      records[i].id + '0',
+      records[i].id,
       D_T_NAME,
-      records[i].donor_id + '0',
+      records[i].donor_id,
       D_T_BLOODTYPE,
       records[i].bloodType,
       D_T_DONATIONDATE,
@@ -98,6 +72,11 @@ static void onAdminLoginClicked(void) {
   gtk_widget_show(initialWindow);
 }
 
+static void onDoctorRefreshClicked(void) {
+  printf("here");
+  on_doctor_page_show();
+}
+
 static void onTreeViewRowActivated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data){
   gtk_widget_show(editRecordWindow);
 }
@@ -108,8 +87,7 @@ void initDoctorWindow() {
 
   treead = GTK_TREE_VIEW(gtk_builder_get_object(builder,"treeview1"));
 
-	insert_button=GTK_WIDGET(gtk_builder_get_object(builder,"insert_doctor_button"));
-	delete_button=GTK_WIDGET(gtk_builder_get_object(builder,"delete_doctor_button"));
+	refresh_doctor_button=GTK_WIDGET(gtk_builder_get_object(builder,"refresh_doctor_button"));
 	
 	logout_button=GTK_WIDGET(gtk_builder_get_object(builder,"doctor_logout"));
 
@@ -132,7 +110,7 @@ void initDoctorWindow() {
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treead), column5);
 
 	g_signal_connect(logout_button, "clicked", G_CALLBACK(onAdminLoginClicked),NULL);
-	// g_signal_connect(delete_button, "clicked", G_CALLBACK(delete_clicked),NULL);
+	g_signal_connect(refresh_doctor_button, "clicked", G_CALLBACK(onDoctorRefreshClicked),NULL);
 
 	g_signal_connect(treead, "row-activated",(GCallback) onTreeViewRowActivated, NULL);
 

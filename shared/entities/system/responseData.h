@@ -11,7 +11,7 @@ struct ResponseData {
     struct User user;
     struct Admin admin;
     struct Record record;
-    struct Record records[20];
+    struct Record records[10];
     struct Specialist specialist;
   };
 };
