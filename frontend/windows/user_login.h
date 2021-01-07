@@ -40,10 +40,13 @@ static void on_user_login_button_clicked(void) {
   recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
 
   printf("[USER_LOGIN] Status: %d\n", response.status);
+  printf("[USER_LOGIN] Name: %s\n", response.data.user.name);
 
   // if auth success
   if (response.status == 1) {
+    loggedUser = response.data.user;
     sprintf(userPhone, "%s", phone);
+    
     gtk_widget_hide(userLoginWindow);
 	  gtk_widget_show(userWindow);
   } else {

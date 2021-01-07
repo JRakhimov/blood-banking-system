@@ -12,7 +12,9 @@ struct User {
   char bloodType[512];
   char email[512];
   char region[512];
-  struct Record lastDonation;
+  union {
+    struct Record lastDonation;
+  };
 };
 
 #endif

@@ -62,7 +62,7 @@ static void onAdminLoginClicked(void) {
 void initDoctorWindow() {
   doctorWindow = GTK_WIDGET(gtk_builder_get_object(builder, "doctor_page"));
 
-  treead=GTK_WIDGET(gtk_builder_get_object(builder,"treeview1"));
+  treead = GTK_TREE_VIEW(gtk_builder_get_object(builder,"treeview1"));
 
 	insert_button=GTK_WIDGET(gtk_builder_get_object(builder,"insert_doctor_button"));
 	delete_button=GTK_WIDGET(gtk_builder_get_object(builder,"delete_doctor_button"));

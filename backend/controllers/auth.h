@@ -37,7 +37,7 @@ struct Response userRegistration(struct Client *client, struct Request request) 
   struct Response response;
 
   if (validUser(request.phoneNumber, request.password) == 0) {
-    insertNewUser(request.phoneNumber, request.password, request.name, request.date, request.bloodType);
+    insertNewUser(request.phoneNumber, request.password, request.name, request.date, request.bloodType, request.email, request.region);
 
     struct User user = selectUserByPhoneNumber(request.phoneNumber);
 

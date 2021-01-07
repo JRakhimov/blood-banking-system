@@ -638,7 +638,7 @@
               <object class="GtkEntry" id="user_phone">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="placeholder_text" translatable="yes">Phone number</property>
+                <property name="placeholder_text" translatable="yes">Phone number/Mail</property>
                 <property name="input_purpose">email</property>
               </object>
               <packing>
@@ -703,6 +703,7 @@
     <property name="default_width">750</property>
     <property name="default_height">300</property>
     <property name="gravity">center</property>
+    <signal name="show" handler="on_user_page_show" swapped="no"/>
     <child>
       <object class="GtkBox" id="user_box">
         <property name="visible">True</property>
@@ -721,34 +722,23 @@
                 <property name="vexpand">True</property>
                 <property name="interpolate_size">True</property>
                 <child>
-                  <object class="GtkGrid" id="get_switch">
+                  <object class="GtkGrid" id="profile_switch">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">45</property>
-                    <property name="margin_right">44</property>
-                    <property name="margin_top">40</property>
-                    <property name="margin_bottom">170</property>
-                    <property name="row_spacing">5</property>
-                    <property name="column_spacing">10</property>
-                    <property name="column_homogeneous">True</property>
-                    <property name="baseline_row">1</property>
+                    <property name="margin_left">300</property>
+                    <property name="margin_right">276</property>
+                    <property name="margin_top">72</property>
+                    <property name="margin_bottom">221</property>
+                    <property name="row_spacing">20</property>
+                    <property name="column_spacing">50</property>
                     <child>
-                      <object class="GtkButton" id="get_apply_btn">
-                        <property name="label" translatable="yes">Apply</property>
+                      <object class="GtkLabel" id="name_label">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="blood_group">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="placeholder_text" translatable="yes">Blood Group</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Name:</property>
+                        <attributes>
+                          <attribute name="foreground" value="#757550507b7b"/>
+                        </attributes>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -756,79 +746,270 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="rhesus_factor">
+                      <object class="GtkLabel" id="ID_label">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="placeholder_text" translatable="yes">Rhesus Factor</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">ID:</property>
+                        <attributes>
+                          <attribute name="foreground" value="#757550507b7b"/>
+                        </attributes>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">1</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkLabel" id="blood_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Blood:</property>
+                        <attributes>
+                          <attribute name="foreground" value="#757550507b7b"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="Region_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Region:</property>
+                        <attributes>
+                          <attribute name="foreground" value="#757550507b7b"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="email_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Email:</property>
+                        <attributes>
+                          <attribute name="foreground" value="#757550507b7b"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="phone_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Phone:</property>
+                        <attributes>
+                          <attribute name="foreground" value="#757550507b7b"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">5</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="name_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Mark</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="ID_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">1</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="blood_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">A+</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="region_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Hachapuri</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="mail_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">corn@mail.ru</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="mai_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">+998909123242</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">5</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
-                    <property name="name">get_tab</property>
-                    <property name="title" translatable="yes">Get</property>
+                    <property name="name">profile_tab</property>
+                    <property name="title" translatable="yes">Profile</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkGrid" id="donate_switch">
+                  <object class="GtkGrid">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">80</property>
-                    <property name="margin_right">80</property>
-                    <property name="margin_top">40</property>
-                    <property name="margin_bottom">56</property>
-                    <property name="row_spacing">5</property>
-                    <property name="column_spacing">5</property>
-                    <property name="column_homogeneous">True</property>
-                    <property name="baseline_row">1</property>
                     <child>
-                      <object class="GtkButton" id="donate_apply_btn">
-                        <property name="label" translatable="yes">Check for results</property>
+                      <object class="GtkGrid" id="get_switch">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="leave_app_btn">
-                        <property name="label" translatable="yes">Leave Application</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">200</property>
+                        <property name="margin_right">200</property>
+                        <property name="margin_top">40</property>
+                        <property name="margin_bottom">151</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="row_spacing">5</property>
+                        <property name="column_spacing">10</property>
+                        <property name="column_homogeneous">True</property>
+                        <property name="baseline_row">1</property>
+                        <child>
+                          <object class="GtkButton" id="get_apply_btn">
+                            <property name="label" translatable="yes">Apply</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="blood_group">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="placeholder_text" translatable="yes">Blood Type</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="rhesus_factor">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="placeholder_text" translatable="yes">Region</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">0</property>
                       </packing>
                     </child>
-                    <child>
-                      <object class="GtkButton" id="donate_blood_btn">
-                        <property name="label" translatable="yes">Donate Blood</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
                   </object>
                   <packing>
-                    <property name="name">donate_tab</property>
-                    <property name="title" translatable="yes">Donate</property>
+                    <property name="name">user_get</property>
+                    <property name="title" translatable="yes">Get</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFixed" id="history_switch">
+                  <object class="GtkGrid" id="user_donate">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkGrid" id="donate_switch">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">200</property>
+                        <property name="margin_right">200</property>
+                        <property name="margin_top">40</property>
+                        <property name="margin_bottom">56</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="row_spacing">30</property>
+                        <property name="column_spacing">10</property>
+                        <property name="column_homogeneous">True</property>
+                        <property name="baseline_row">1</property>
+                        <child>
+                          <object class="GtkButton" id="donate_btn">
+                            <property name="label" translatable="yes">Donate</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="user_donate_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">Thanks for your support!</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="name">user_donate</property>
+                    <property name="title" translatable="yes">Donate</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFixed" id="history_switc">
+                    <property name="width_request">500</property>
+                    <property name="height_request">400</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -837,6 +1018,7 @@
                         <property name="height_request">500</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="margin_left">20</property>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection"/>
                         </child>
@@ -848,9 +1030,9 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">history_tab</property>
+                    <property name="name">user_history</property>
                     <property name="title" translatable="yes">History</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>
@@ -880,38 +1062,36 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkStackSwitcher" id="switch">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">150</property>
-                    <property name="margin_start">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="homogeneous">True</property>
-                    <property name="icon_size">0</property>
-                    <property name="stack">pages</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkButton" id="user_logout">
                     <property name="label" translatable="yes">Logout</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="halign">end</property>
-                    <property name="margin_left">200</property>
-                    <property name="margin_right">15</property>
+                    <property name="margin_right">20</property>
                     <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
                     <property name="hexpand">True</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkStackSwitcher" id="history_switch">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">20</property>
+                    <property name="margin_right">40</property>
+                    <property name="margin_start">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="icon_size">0</property>
+                    <property name="stack">pages</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
                   </packing>
                 </child>
@@ -949,8 +1129,8 @@
           <object class="GtkGrid" id="reg_inf_grid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_top">17</property>
-            <property name="margin_bottom">20</property>
+            <property name="margin_top">30</property>
+            <property name="margin_bottom">30</property>
             <property name="orientation">vertical</property>
             <property name="row_spacing">6</property>
             <property name="column_homogeneous">True</property>
@@ -997,7 +1177,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
             <child>
@@ -1009,7 +1189,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">7</property>
               </packing>
             </child>
             <child>
@@ -1021,7 +1201,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
@@ -1029,6 +1209,28 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="placeholder_text" translatable="yes">Name</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="user_reg_region">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="placeholder_text" translatable="yes">Region</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="user_reg_mail">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="placeholder_text" translatable="yes">Mail</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>

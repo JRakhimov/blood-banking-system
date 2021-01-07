@@ -10,6 +10,7 @@
 #include "../../shared/entities/system/response.h"
 
 #include "../controllers/auth.h"
+#include "../controllers/user.h"
 
 /** Function Declarations */
 int handleRequest(struct Client *client, struct Request *request);
@@ -23,9 +24,7 @@ int handleRequest(struct Client *client, struct Request *request) {
   struct Response response;
   struct Route route = request->route;
 
-  printf("here");
-
-  printf("Method: %s\n", route.method);
+  printf("\nModule: %s, Method: %s\n", route.module, route.method);
 
   if (strcmp(route.module, AUTH_MODULE) == 0) {
     if (strcmp(route.method, USER_LOGIN_METHOD) == 0) {
@@ -38,6 +37,12 @@ int handleRequest(struct Client *client, struct Request *request) {
 
     if (strcmp(route.method, ADMIN_LOGIN_METHOD) == 0) {
       return sendResponse(client->socket, adminLogin(client, *request));
+    }
+  }
+
+  if (strcmp(route.module, USER_MODULE) == 0) {
+    if (strcmp(route.method, USER_INFO_METHOD) == 0) {
+      return sendResponse(client->socket, userInfo(client, *request));
     }
   }
 

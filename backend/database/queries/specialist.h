@@ -8,7 +8,7 @@ void insertNewSpecialist(int id, char *username, char *name, char *password) {
     MYSQL *connection = connectDatabase();
 
     char query[100];
-    sprintf(query, "INSERT INTO %s.specialist (id, username, name, password) VALUES(%d,\"%s\",\"%s\");", DATABASE_NAME, id, username, name, password);
+    sprintf(query, "INSERT INTO %s.specialist (id, username, name, password) VALUES(%d,\"%s\",\"%s\", \"%s\");", DATABASE_NAME, id, username, name, password);
     printf("%s\n", query);
 
     makeQuery(connection, query);

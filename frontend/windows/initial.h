@@ -38,8 +38,6 @@ void initInitialWindow() {
 	radio_btn1 = GTK_WIDGET(gtk_builder_get_object (builder, "admin_radio_btn"));
 	radio_btn2 = GTK_WIDGET(gtk_builder_get_object (builder, "user_radio_btn"));
 
-	gtk_widget_hide(button);
-
 	g_signal_connect(button, "clicked", G_CALLBACK(onContinueClicked), NULL);
 }
 

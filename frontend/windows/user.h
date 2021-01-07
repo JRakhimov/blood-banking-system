@@ -1,4 +1,8 @@
 #include "../gtkInjector.h"
+#include "../socket/socketInjector.h"
+
+#include "../../shared/entities/entities.h"
+#include "../../shared/routes.h"
 
 #include <gtk/gtkx.h>
 
@@ -10,6 +14,13 @@ typedef enum {
   NUM_COLUMNS
 } Column_type;
 
+GtkLabel *userInfoName;
+GtkLabel *userInfoPhone;
+GtkLabel *userInfoMail;
+GtkLabel *userInfoBlood;
+GtkLabel *userInfoId;
+GtkLabel *userInfoRegion;
+
 GtkBox *userBox;
 GtkStack *userStack;
 GtkWidget *userLogOutButton;
@@ -20,7 +31,37 @@ GtkWidget *historyGrid;
 GtkTreeView *tree;
 GtkTreeModel *model;
 
-static GtkTreeModel *create_and_fill_model (void){
+void on_user_page_show() {
+  struct Request request;
+  struct Response response;
+
+  sprintf(request.route.module, USER_MODULE);
+  sprintf(request.route.method, USER_INFO_METHOD);
+
+  sendAll(socketClientId, &request, sizeof(request), 0);
+  recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
+
+  printf("[USER] Status: %d\n", response.status);
+  printf("[USER] Name: %s\n", response.data.user.name);
+
+  char temp[10];
+
+  sprintf(temp, "%d", response.data.user.id);
+
+  // if auth success
+  if (response.status == 1) {
+    gtk_label_set_text(userInfoName, response.data.user.name);
+    gtk_label_set_text(userInfoPhone, response.data.user.phoneNumber);
+    gtk_label_set_text(userInfoMail, response.data.user.email);
+    gtk_label_set_text(userInfoBlood, response.data.user.bloodType);
+    gtk_label_set_text(userInfoId, temp);
+    gtk_label_set_text(userInfoRegion, response.data.user.region);
+  } else {
+    
+  }
+}
+
+static GtkTreeModel *create_and_fill_model (void) {
   GtkListStore *store;
   GtkTreeIter iter;
 
@@ -44,9 +85,16 @@ static void on_user_logout_button_clicked(void) {
 void initUserWindow() {
 	userWindow = GTK_WIDGET(gtk_builder_get_object(builder, "user_page"));
 
+  userInfoName = GTK_LABEL(gtk_builder_get_object(builder, "name_input"));
+  userInfoPhone = GTK_LABEL(gtk_builder_get_object(builder, "mai_input"));
+  userInfoMail = GTK_LABEL(gtk_builder_get_object(builder, "mail_input"));
+  userInfoBlood = GTK_LABEL(gtk_builder_get_object(builder, "blood_input"));
+  userInfoId = GTK_LABEL(gtk_builder_get_object(builder, "ID_input"));
+  userInfoRegion = GTK_LABEL(gtk_builder_get_object(builder, "region_input"));
+
   userLogOutButton = GTK_WIDGET(gtk_builder_get_object(builder, "user_logout"));
 
-  tree = GTK_WIDGET(gtk_builder_get_object(builder,"TreeView"));
+  tree = GTK_TREE_VIEW(gtk_builder_get_object(builder,"TreeView"));
 
 	getGrid = GTK_WIDGET(gtk_builder_get_object(builder, "get_switch"));
 	donateGrid = GTK_WIDGET(gtk_builder_get_object(builder, "donate_switch"));
