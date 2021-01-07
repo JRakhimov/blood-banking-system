@@ -11,6 +11,11 @@ typedef enum {
   D_T_NUM_COLUMNS
 } Doctor_Column_type;
 
+int selectedRecordId;
+GtkEntry *recordBloodTypeInput;
+GtkWidget *approveButton;
+GtkWidget *declineButton;
+
 GtkTreeView *treead;
 GtkTreeModel *modelad;
 GtkWidget *refresh_doctor_button;
@@ -73,12 +78,36 @@ static void onAdminLoginClicked(void) {
 }
 
 static void onDoctorRefreshClicked(void) {
-  printf("here");
   on_doctor_page_show();
+}
+
+static void onApproveButton(void) {
+  const char* type = gtk_entry_get_text(recordBloodTypeInput);
+
+  printf("ID: %d\n", selectedRecordId);
+}
+
+static void onDeclineButton(void) {
+  const char* type = gtk_entry_get_text(recordBloodTypeInput);
+}
+
+static void closeEdit(void) {
+  gtk_widget_hide(editRecordWindow);
 }
 
 static void onTreeViewRowActivated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data){
   gtk_widget_show(editRecordWindow);
+
+  GtkTreeModel *model = gtk_tree_view_get_model(tree);
+  GtkTreeIter iter;
+
+  if (gtk_tree_model_get_iter(model, &iter, path)) {
+    int *recordId;
+
+    gtk_tree_model_get(model, &iter, D_T_ID, &recordId, -1);
+
+    selectedRecordId = recordId;
+  }
 }
 
 void initDoctorWindow() {
@@ -88,8 +117,11 @@ void initDoctorWindow() {
   treead = GTK_TREE_VIEW(gtk_builder_get_object(builder,"treeview1"));
 
 	refresh_doctor_button=GTK_WIDGET(gtk_builder_get_object(builder,"refresh_doctor_button"));
-	
 	logout_button=GTK_WIDGET(gtk_builder_get_object(builder,"doctor_logout"));
+
+  recordBloodTypeInput = GTK_ENTRY(gtk_builder_get_object(builder, "blood_type"));
+  approveButton = GTK_WIDGET(gtk_builder_get_object(builder,"approve_button"));
+  declineButton = GTK_WIDGET(gtk_builder_get_object(builder,"not_approve_button"));
 
   GtkTreeViewColumn *column1=gtk_tree_view_column_new_with_attributes("ID",gtk_cell_renderer_text_new (),"text",D_T_ID,NULL);  
   GtkTreeViewColumn *column2=gtk_tree_view_column_new_with_attributes("Name",gtk_cell_renderer_text_new (),"text",D_T_NAME,NULL);  
@@ -112,6 +144,9 @@ void initDoctorWindow() {
 	g_signal_connect(logout_button, "clicked", G_CALLBACK(onAdminLoginClicked),NULL);
 	g_signal_connect(refresh_doctor_button, "clicked", G_CALLBACK(onDoctorRefreshClicked),NULL);
 
-	g_signal_connect(treead, "row-activated",(GCallback) onTreeViewRowActivated, NULL);
+	g_signal_connect(approveButton, "clicked", G_CALLBACK(onApproveButton),NULL);
+	g_signal_connect(declineButton, "clicked", G_CALLBACK(onDeclineButton),NULL);
 
+	g_signal_connect(treead, "row-activated",(GCallback) onTreeViewRowActivated, NULL);
+  g_signal_connect(G_OBJECT(editRecordWindow), "destroy", G_CALLBACK(closeEdit), NULL);
 }
