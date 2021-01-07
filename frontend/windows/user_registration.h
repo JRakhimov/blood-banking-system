@@ -24,7 +24,7 @@ static void on_btn_reg_clicked(void) {
     return;
   }
 
-  printf("Username:%s\n", phone);
+  printf("Phone:%s\n", phone);
   printf("Birth_date:%s\n", birth);
   printf("Password:%s\n", pass);
   printf("Name:%s\n", name);

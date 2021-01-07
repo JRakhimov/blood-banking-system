@@ -36,7 +36,6 @@ struct Response userLogin(struct Client *client, struct Request request) {
 struct Response userRegistration(struct Client *client, struct Request request) {
   struct Response response;
 
-  if (validUser(request.phoneNumber, request.password) == 0) {
     insertNewUser(request.phoneNumber, request.password, request.name, request.date, request.bloodType, request.email, request.region);
 
     struct User user = selectUserByPhoneNumber(request.phoneNumber);
@@ -45,10 +44,14 @@ struct Response userRegistration(struct Client *client, struct Request request) 
 
     response.status = 1;
     response.data.user = user;
-  } else {
-    response.status = 0;
-    sprintf(response.message, "User exists");
-  }
+
+  // if (!validUser(request.phoneNumber, request.password)) {
+
+  // } else {
+  //   response.status = 0;
+  //   sprintf(response.message, "User exists");
+  //   printf("User exists");
+  // }
 
   return response;
 }

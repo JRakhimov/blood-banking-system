@@ -43,6 +43,87 @@ int get_day_of_year() {
   return tm.tm_yday;
 }
 
+int calculateDaysLeft(char *lastDateOfDonation, int afterDays){
+    
+    int year, month, day;
+    
+    sscanf(lastDateOfDonation, "%d-%d-%d", &year, &month, &day);
+    
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int currentDay = tm->tm_yday+1;
+    int currentMonth = tm->tm_mon+1;
+    int currentYear = tm->tm_year+1900;
+    
+    int dayToVisitDoy = getDoyAfterGivenTime(lastDateOfDonation, afterDays);
+    int currentDoy = daysInGivenDate(currentYear, currentMonth, currentDay);
+    int differnce = dayToVisitDoy - currentDoy;
+    return differnce;
+}
+
+int getDoyAfterGivenTime(char* date, int addDays){
+
+    int year, month, day;
+    
+    sscanf(date, "%d-%d-%d", &year, &month, &day);
+    
+    int doy = daysInGivenDate(year, month, day);
+    int addedDoy = doy + addDays;
+    
+    return addedDoy;
+}
+
+int daysInGivenDate(int year, int mon, int day){
+    int days_in_feb = 28, doy;    // day of year
+
+    doy = day;
+
+    // check for leap year
+    if( (year % 4 == 0 && year % 100 != 0 ) || (year % 400 == 0) )
+    {
+        days_in_feb = 29;
+    }
+
+    switch(mon)
+    {
+        case 2:
+            doy += 31;
+            break;
+        case 3:
+            doy += 31+days_in_feb;
+            break;
+        case 4:
+            doy += 31+days_in_feb+31;
+            break;
+        case 5:
+            doy += 31+days_in_feb+31+30;
+            break;
+        case 6:
+            doy += 31+days_in_feb+31+30+31;
+            break;
+        case 7:
+            doy += 31+days_in_feb+31+30+31+30;
+            break;            
+        case 8:
+            doy += 31+days_in_feb+31+30+31+30+31;
+            break;
+        case 9:
+            doy += 31+days_in_feb+31+30+31+30+31+31;
+            break;
+        case 10:
+            doy += 31+days_in_feb+31+30+31+30+31+31+30;            
+            break;            
+        case 11:
+            doy += 31+days_in_feb+31+30+31+30+31+31+30+31;            
+            break;                        
+        case 12:
+            doy += 31+days_in_feb+31+30+31+30+31+31+30+31+30;            
+            break;                                    
+    }
+
+    return doy;
+}
+
 int compareDates(char *date, int daysDifference) {
   int year, month, day;
 
@@ -58,9 +139,7 @@ int compareDates(char *date, int daysDifference) {
 void checkUserDonationStatus() {
   gtk_widget_hide(userDonateButton);
 
-  compareDates(loggedUser.lastDonation.date, 21);
-
-  if (loggedUser.lastDonation.id == 0 || compareDates(loggedUser.lastDonation.date, 21) == 1) {
+  if (loggedUser.lastDonation.id == 0 || calculateDaysLeft(loggedUser.lastDonation.date, 30) <= 0) {
     gtk_widget_show(userDonateButton);
   } else if (strcmp(loggedUser.lastDonation.status, "approved") == 0) {
     gtk_label_set_text(userDonateLabel, "You have successfully donated blood, the next donation cycle is in 3 weeks. Thank you for contributing to a healthy future.");

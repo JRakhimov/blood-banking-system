@@ -41,9 +41,14 @@ struct User selectUserByPhoneNumber(char *phone){
         sprintf(user.password, "%s", row[2]);
         sprintf(user.name, "%s", row[3]);
         sprintf(user.date, "%s", row[4]);
-        sprintf(user.bloodType, "%s", row[5]);
         sprintf(user.email, "%s", row[6]);
         sprintf(user.region, "%s", row[8]);
+
+        if (row[5] == NULL) {
+            sprintf(user.bloodType, "%s", "Undefined");
+        } else {
+            sprintf(user.bloodType, "%s", row[5]);
+        }
 
         struct Record record;
 
