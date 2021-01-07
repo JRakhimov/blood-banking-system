@@ -11,6 +11,7 @@
 
 #include "../controllers/auth.h"
 #include "../controllers/user.h"
+#include "../controllers/record.h"
 
 /** Function Declarations */
 int handleRequest(struct Client *client, struct Request *request);
@@ -43,6 +44,16 @@ int handleRequest(struct Client *client, struct Request *request) {
   if (strcmp(route.module, USER_MODULE) == 0) {
     if (strcmp(route.method, USER_INFO_METHOD) == 0) {
       return sendResponse(client->socket, userInfo(client, *request));
+    }
+  }
+
+  if (strcmp(route.module, RECORD_MODULE) == 0) {
+    if (strcmp(route.method, DONATE_BLOOD_METHOD) == 0) {
+      return sendResponse(client->socket, donateBlood(client, *request));
+    }
+
+    if (strcmp(route.method, GET_PENDING_DONATES_METHOD) == 0) {
+      return sendResponse(client->socket, getPendingRecords(client, *request));
     }
   }
 

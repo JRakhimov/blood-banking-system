@@ -44,53 +44,61 @@ struct Record* getUserHistory(int userId, struct Record notes[]) {
     return notes;
 }
 
-struct Record* getBloodsToAnalyze(struct Record notes[]) {
-    struct Record records[20];
+struct Record *makeRecordsStruct(MYSQL_RES *res) {
+    struct Record *records = calloc(10, sizeof(struct Record));
+    MYSQL_ROW row;
+    int i = 0;
+
+    while((row = mysql_fetch_row(res)) != NULL) {
+        struct Record record;
+
+        record.id = atoi(row[0]);
+        record.donor_id= atoi(row[1]);
+        
+        sprintf(record.action, "%s", row[3]);
+        sprintf(record.status, "%s", row[4]);
+        sprintf(record.date, "%s", row[5]);
+
+        if (row[2] == NULL) {
+            sprintf(record.bloodType, "%s", "Undefined");
+        } else {
+            sprintf(record.bloodType, "%s", row[2]);
+        }
+        
+        if (row[6] == NULL) {
+            record.taker_id = 0;
+        } else {
+            record.taker_id = atoi(row[6]);
+        }
+
+        records[i++] = record;
+    }
+
+    return records;
+}
+
+struct Record* getBloodsToAnalyze() {
+    struct Record *records;
 
      MYSQL *connection = connectDatabase(); 
     
     char query[300];
-    sprintf(query, "SELECT * FROM %s.record WHERE _action = \"analysis\" AND _status = \"pending\" AND taker_id IS NULL;", DATABASE_NAME);
+    sprintf(query, "SELECT * FROM %s.record WHERE status = \"pending\" AND taker_id IS NULL;", DATABASE_NAME);
 
     MYSQL_RES *res;
     MYSQL_ROW row;
     
-    int i=0;
-
     mysql_query(connection, query);
     
     res = mysql_store_result(connection);
 
-    while(row = mysql_fetch_row(res)){
-        
-        records[i].id = atoi(row[0]);
-        
-        records[i].donor_id= atoi(row[1]);
-
-        sprintf(records[i].bloodType, "%s", row[2]);
-        sprintf(records[i].action, "%s", row[3]);
-        sprintf(records[i].status, "%s", row[4]);
-        sprintf(records[i].date, "%s", row[5]);
-        
-        if (row[6]==NULL){records[i].taker_id = 0;}
-        else {
-            records[i].taker_id = atoi(row[6]);
-        }
-        
-        i++;
-    }
-
-    i=0;
+    records = makeRecordsStruct(res);
 
     mysql_free_result(res); // free result set
 
-    for(int i=0;i<sizeof(records)/sizeof(struct Record);i++ ){
-        notes[i]=records[i];
-    }
-
     closeConnection(connection);
 
-    return notes;
+    return records;
 }
 
 void takeAnalysis(int userId) {
@@ -103,11 +111,11 @@ void takeAnalysis(int userId) {
     closeConnection(connection);
 }
 
-void donateBlood(int userId, char *type) {
+void donateBloodByUser(int userId) {
     MYSQL *connection = connectDatabase();
     char query[300];
 
-    sprintf(query, "INSERT INTO %s.record (donor_id, blood_type, _action, _status, date) VALUES(%d, \"%s\", \"donor\", \"approved\", NOW());", DATABASE_NAME, userId, type);
+    sprintf(query, "INSERT INTO %s.record (donor_id, action, status, date) VALUES(%d, \"donor\", \"pending\", NOW());", DATABASE_NAME, userId);
     makeQuery(connection, query);
 
     closeConnection(connection);

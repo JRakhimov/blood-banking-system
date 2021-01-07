@@ -5,7 +5,7 @@
 
 static GtkBuilder *builder;
 static GtkWidget *initialWindow, *userLoginWindow, *adminLoginWindow, *userRegistrationWindow;
-static GtkWidget *userWindow, *doctorWindow, *adminWindow;
+static GtkWidget *userWindow, *doctorWindow, *adminWindow, *editRecordWindow;
 static char adminUsername[512], userPhone[512];
 static struct User loggedUser;
 

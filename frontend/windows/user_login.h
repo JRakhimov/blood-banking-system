@@ -44,7 +44,6 @@ static void on_user_login_button_clicked(void) {
 
   // if auth success
   if (response.status == 1) {
-    loggedUser = response.data.user;
     sprintf(userPhone, "%s", phone);
     
     gtk_widget_hide(userLoginWindow);

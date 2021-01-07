@@ -4,6 +4,8 @@
 #include "../../shared/entities/entities.h"
 #include "../../shared/routes.h"
 
+#include <stdio.h>
+#include <time.h>
 #include <gtk/gtkx.h>
 
 typedef enum {
@@ -21,15 +23,53 @@ GtkLabel *userInfoBlood;
 GtkLabel *userInfoId;
 GtkLabel *userInfoRegion;
 
+GtkWidget *userDonateButton;
+GtkWidget *userLogOutButton;
+
+GtkLabel *userDonateLabel;
+
 GtkBox *userBox;
 GtkStack *userStack;
-GtkWidget *userLogOutButton;
 GtkStackSwitcher *userSwitcher;
 GtkWidget *getGrid;
 GtkWidget *donateGrid;
 GtkWidget *historyGrid;
 GtkTreeView *tree;
 GtkTreeModel *model;
+
+int get_day_of_year() {
+  time_t t = time(NULL);
+  struct tm tm = *localtime(&t);
+  return tm.tm_yday;
+}
+
+int compareDates(char *date, int daysDifference) {
+  int year, month, day;
+
+  sscanf(date, "%d-%d-%d", &year, &month, &day);
+
+  int res = day - get_day_of_year();
+
+  printf("Difference: %d\n", (res * res) / res);
+
+  return (res * res) / res > daysDifference ? 1 : 0;
+}
+
+void checkUserDonationStatus() {
+  gtk_widget_hide(userDonateButton);
+
+  compareDates(loggedUser.lastDonation.date, 21);
+
+  if (loggedUser.lastDonation.id == 0 || compareDates(loggedUser.lastDonation.date, 21) == 1) {
+    gtk_widget_show(userDonateButton);
+  } else if (strcmp(loggedUser.lastDonation.status, "approved") == 0) {
+    gtk_label_set_text(userDonateLabel, "You have successfully donated blood, the next donation cycle is in 3 weeks. Thank you for contributing to a healthy future.");
+  } else if (strcmp(loggedUser.lastDonation.status, "denied") == 0) {
+    gtk_label_set_text(userDonateLabel, "Your test has been tested negative, please see your doctor and try to come back in a month");
+  } else {
+    gtk_label_set_text(userDonateLabel, "Your analyzes are being checked");
+  }
+}
 
 void on_user_page_show() {
   struct Request request;
@@ -48,16 +88,41 @@ void on_user_page_show() {
 
   sprintf(temp, "%d", response.data.user.id);
 
-  // if auth success
   if (response.status == 1) {
+    loggedUser = response.data.user;
+
     gtk_label_set_text(userInfoName, response.data.user.name);
     gtk_label_set_text(userInfoPhone, response.data.user.phoneNumber);
     gtk_label_set_text(userInfoMail, response.data.user.email);
     gtk_label_set_text(userInfoBlood, response.data.user.bloodType);
     gtk_label_set_text(userInfoId, temp);
     gtk_label_set_text(userInfoRegion, response.data.user.region);
+
+    checkUserDonationStatus();
   } else {
     
+  }
+}
+
+
+
+static void on_user_logout_button_clicked(void) {
+	gtk_widget_hide(userWindow);
+	gtk_widget_show(initialWindow);
+}
+
+static void on_user_donate_button_clicked(void) {
+  struct Request request;
+  struct Response response;
+
+  sprintf(request.route.module, RECORD_MODULE);
+  sprintf(request.route.method, DONATE_BLOOD_METHOD);
+
+  sendAll(socketClientId, &request, sizeof(request), 0);
+  recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
+
+  if (response.status == 1) {
+    on_user_page_show();
   }
 }
 
@@ -77,11 +142,6 @@ static GtkTreeModel *create_and_fill_model (void) {
   return GTK_TREE_MODEL (store);
 }
 
-static void on_user_logout_button_clicked(void) {
-	gtk_widget_hide(userWindow);
-	gtk_widget_show(initialWindow);
-}
-
 void initUserWindow() {
 	userWindow = GTK_WIDGET(gtk_builder_get_object(builder, "user_page"));
 
@@ -92,7 +152,10 @@ void initUserWindow() {
   userInfoId = GTK_LABEL(gtk_builder_get_object(builder, "ID_input"));
   userInfoRegion = GTK_LABEL(gtk_builder_get_object(builder, "region_input"));
 
+  userDonateButton = GTK_WIDGET(gtk_builder_get_object(builder, "donate_btn"));
   userLogOutButton = GTK_WIDGET(gtk_builder_get_object(builder, "user_logout"));
+
+  userDonateLabel = GTK_LABEL(gtk_builder_get_object(builder, "user_donate_label"));
 
   tree = GTK_TREE_VIEW(gtk_builder_get_object(builder,"TreeView"));
 
@@ -104,6 +167,7 @@ void initUserWindow() {
   userStack = GTK_STACK(gtk_builder_get_object(builder, "pages"));
   userSwitcher = GTK_STACK_SWITCHER(gtk_builder_get_object(builder, "switch"));
 
+  g_signal_connect(userDonateButton, "clicked", G_CALLBACK(on_user_donate_button_clicked), NULL);
   g_signal_connect(userLogOutButton, "clicked", G_CALLBACK(on_user_logout_button_clicked), NULL);
 
   GtkTreeViewColumn *column1 = gtk_tree_view_column_new_with_attributes("ID",gtk_cell_renderer_text_new (),"text",ID,NULL);

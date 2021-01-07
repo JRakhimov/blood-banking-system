@@ -4,6 +4,7 @@
 // Modules
 #define AUTH_MODULE "auth"
 #define USER_MODULE "user"
+#define RECORD_MODULE "record"
 
 
 // Methods
@@ -14,5 +15,9 @@
 
 // User
 #define USER_INFO_METHOD "userInfo"
+
+// Record
+#define DONATE_BLOOD_METHOD "donateBlood"
+#define GET_PENDING_DONATES_METHOD "getPendingDonates"
 
 #endif

@@ -13,8 +13,6 @@ struct Response userInfo(struct Client *client, struct Request request) {
 
   struct User user = selectUserByPhoneNumber(client->user.phoneNumber);
 
-  printf("%d\n", user.lastDonation.id);
-
   response.status = 1;
   response.data.user = user;
 

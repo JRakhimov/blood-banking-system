@@ -2,7 +2,7 @@
 
 #include <gtk/gtk.h>
 
-typedef enum{
+typedef enum {
   D_T_ID,
   D_T_NAME,
   D_T_BLOODTYPE,
@@ -20,47 +20,91 @@ GtkWidget *modify_button;
 GtkWidget *logout_button;
 GtkTreeSelection *selection;
 
-static GtkTreeModel *create_and_fill_doctor_model (void) {
+static GtkTreeModel *create_and_fill_doctor_model (struct Record *records) {
   GtkListStore *store;
   GtkTreeIter iter;
 
-  store=gtk_list_store_new (5, G_TYPE_STRING,G_TYPE_STRING,G_TYPE_STRING,G_TYPE_STRING,G_TYPE_STRING);
+  store = gtk_list_store_new(5, G_TYPE_INT,G_TYPE_INT,G_TYPE_STRING,G_TYPE_STRING,G_TYPE_STRING);
 
   gtk_list_store_append(store,&iter);
-  gtk_list_store_set (store, &iter,
-      D_T_ID, "1",
-      D_T_NAME, "Nana",
-      D_T_BLOODTYPE,"A+",
-      D_T_DONATIONDATE, "15.11.2020",
-      D_T_ACTION, "Approved",
-      -1);
+  gtk_list_store_set (
+    store,
+    &iter,
+    D_T_ID, records[0].id,
+    D_T_NAME, records[0].donor_id,
+    D_T_BLOODTYPE, records[0].bloodType,
+    D_T_DONATIONDATE, records[0].date,
+    D_T_ACTION, records[0].status,
+    -1
+  );
 
-  return GTK_TREE_MODEL (store);
+  gtk_list_store_append(store,&iter);
+  gtk_list_store_set (
+    store,
+    &iter,
+    D_T_ID, records[1].id,
+    D_T_NAME, records[1].donor_id,
+    D_T_BLOODTYPE, records[1].bloodType,
+    D_T_DONATIONDATE, records[1].date,
+    D_T_ACTION, records[1].status,
+    -1
+  );
+
+  printf("1) %ld\n", sizeof(*records));
+  printf("2) %ld\n", sizeof(struct Record));
+
+  for (int i = 0; i < sizeof(records) / sizeof(struct Record); i++) {
+    gtk_list_store_append(store,&iter);
+    gtk_list_store_set (
+      store,
+      &iter, D_T_ID,
+      records[i].id + '0',
+      D_T_NAME,
+      records[i].donor_id + '0',
+      D_T_BLOODTYPE,
+      records[i].bloodType,
+      D_T_DONATIONDATE,
+      records[i].date,
+      D_T_ACTION,
+      records[i].status,
+      -1
+    );
+  }
+
+  return GTK_TREE_MODEL(store);
 }
 
-//Insert button clicked
-// static void insert_clicked(void){
-// 	modelad = append_element();
-// 	gtk_tree_view_set_model (GTK_TREE_VIEW (treead), modelad);
-// }
-//Delete button clicked
-// static void delete_clicked(void){
-	
-// 	GtkTreeIter iter1;
+void on_doctor_page_show() {
+  struct Request request;
+  struct Response response;
 
-// 	selection=gtk_tree_view_get_selection(GTK_TREE_VIEW (treead));
-// 	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(selection),GTK_SELECTION_SINGLE);
-// 	if(gtk_tree_selection_get_selected(selection,&modelad,&iter1)){
-// 	gtk_list_store_remove(GTK_LIST_STORE(modelad),&iter1);}
-// }
+  sprintf(request.route.module, RECORD_MODULE);
+  sprintf(request.route.method, GET_PENDING_DONATES_METHOD);
+
+  sendAll(socketClientId, &request, sizeof(request), 0);
+  recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
+
+  printf("[DOCTOR] Status: %d\n", response.status);
+  printf("[DOCTOR] Record: %d\n", response.data.records[0].id);
+
+  if (response.status == 1) {
+    modelad = create_and_fill_doctor_model(response.data.records);
+    gtk_tree_view_set_model(GTK_TREE_VIEW (treead), modelad);
+  }
+}
 
 static void onAdminLoginClicked(void) {
 	gtk_widget_hide(doctorWindow);
   gtk_widget_show(initialWindow);
 }
 
+static void onTreeViewRowActivated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data){
+  gtk_widget_show(editRecordWindow);
+}
+
 void initDoctorWindow() {
   doctorWindow = GTK_WIDGET(gtk_builder_get_object(builder, "doctor_page"));
+  editRecordWindow = GTK_WIDGET(gtk_builder_get_object(builder, "edit_window"));
 
   treead = GTK_TREE_VIEW(gtk_builder_get_object(builder,"treeview1"));
 
@@ -87,10 +131,9 @@ void initDoctorWindow() {
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treead), column4);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treead), column5);
 
-
-	modelad = create_and_fill_doctor_model();
-	gtk_tree_view_set_model (GTK_TREE_VIEW (treead), modelad);
-
 	g_signal_connect(logout_button, "clicked", G_CALLBACK(onAdminLoginClicked),NULL);
 	// g_signal_connect(delete_button, "clicked", G_CALLBACK(delete_clicked),NULL);
+
+	g_signal_connect(treead, "row-activated",(GCallback) onTreeViewRowActivated, NULL);
+
 }
