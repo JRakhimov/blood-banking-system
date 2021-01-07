@@ -445,7 +445,7 @@
                       <placeholder/>
                     </child>
                     <child>
-                      <object class="GtkButton" id="delete_doctor_button">
+                      <object class="GtkButton" id="refresh_doctor_button">
                         <property name="label" translatable="yes">Refresh</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -498,10 +498,24 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_top">40</property>
-            <property name="margin_bottom">20</property>
+            <property name="margin_bottom">17</property>
             <property name="orientation">vertical</property>
-            <property name="row_spacing">6</property>
+            <property name="row_spacing">5</property>
             <property name="column_homogeneous">True</property>
+            <child>
+              <object class="GtkButton" id="approve_button">
+                <property name="label" translatable="yes">Approved</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="margin_left">50</property>
+                <property name="margin_right">50</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkLabel" id="edit_label">
                 <property name="visible">True</property>
@@ -525,34 +539,61 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="approve_button">
-                <property name="label" translatable="yes">Approved</property>
+              <object class="GtkButton" id="not_approve_button">
+                <property name="label" translatable="yes">Not approved</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="margin_left">50</property>
+                <property name="margin_right">50</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkLabel" id="enter_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">4</property>
+                    <property name="label" translatable="yes">Enter the blood type:</property>
+                    <attributes>
+                      <attribute name="font-desc" value="Manjari Bold 10"/>
+                      <attribute name="foreground" value="#000000000000"/>
+                    </attributes>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+                  <object class="GtkEntry" id="blood_type">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                    <property name="margin_left">3</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">1</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkButton" id="not_approve_button">
-                <property name="label" translatable="yes">Not approved</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="padding">100</property>
+            <property name="padding">85</property>
             <property name="position">100</property>
           </packing>
         </child>
