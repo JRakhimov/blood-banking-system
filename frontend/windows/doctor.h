@@ -84,11 +84,47 @@ static void onDoctorRefreshClicked(void) {
 static void onApproveButton(void) {
   const char* type = gtk_entry_get_text(recordBloodTypeInput);
 
-  printf("ID: %d\n", selectedRecordId);
+  printf("[Approved] ID: %d, BType: %s\n", selectedRecordId, type);
+
+  struct Request request;
+  struct Response response;
+
+  sprintf(request.route.module, RECORD_MODULE);
+  sprintf(request.route.method, SET_ANALYSIS_RESULT_METHOD);
+
+  request.id = selectedRecordId;
+
+  sprintf(request.status, "%s", "approved");
+  sprintf(request.bloodType, "%s", type);
+
+  sendAll(socketClientId, &request, sizeof(request), 0);
+  recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
+
+  on_doctor_page_show();
+  gtk_widget_hide(editRecordWindow);
 }
 
 static void onDeclineButton(void) {
   const char* type = gtk_entry_get_text(recordBloodTypeInput);
+
+  printf("[Approved] ID: %d, BType: %s\n", selectedRecordId, type);
+
+  struct Request request;
+  struct Response response;
+
+  sprintf(request.route.module, RECORD_MODULE);
+  sprintf(request.route.method, SET_ANALYSIS_RESULT_METHOD);
+
+  request.id = selectedRecordId;
+
+  sprintf(request.status, "%s", "denied");
+  sprintf(request.bloodType, "%s", type);
+
+  sendAll(socketClientId, &request, sizeof(request), 0);
+  recv(socketClientId, &response, sizeof(response), MSG_WAITALL);
+
+  on_doctor_page_show();
+  gtk_widget_hide(editRecordWindow);
 }
 
 static void closeEdit(void) {

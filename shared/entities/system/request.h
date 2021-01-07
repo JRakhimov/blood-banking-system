@@ -15,6 +15,9 @@ struct Request {
   char email[512];
   char name[512];
   char date[512];
+
+  int id;
+  char status[512];
 };
 
 #endif

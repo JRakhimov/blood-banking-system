@@ -9,6 +9,8 @@ struct Response donateBlood(struct Client *client, struct Request request);
 
 struct Response getPendingRecords(struct Client *client, struct Request request);
 
+struct Response setAnalysisResult(struct Client *client, struct Request request);
+
 // Implementations
 struct Response donateBlood(struct Client *client, struct Request request) {
   struct Response response;
@@ -31,6 +33,18 @@ struct Response getPendingRecords(struct Client *client, struct Request request)
     response.data.records[i] = records[i];
   }
   
+  return response;
+}
+
+struct Response setAnalysisResult(struct Client *client, struct Request request) {
+  struct Response response;
+
+  printf("type: %s\n", request.bloodType);
+
+  setAnalisysResultForRecord(request.id, request.status, request.bloodType);
+  
+  response.status = 1;
+
   return response;
 }
 

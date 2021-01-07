@@ -131,11 +131,11 @@ void takeBlood(int recordId, int takerId) {
     closeConnection(connection);
 }
 
-void setAnalisysResult(int recordId, char *status, char *type) {
+void setAnalisysResultForRecord(int recordId, char *status, char *type) {
     MYSQL *connection = connectDatabase();
     char query[300];
     
-    sprintf(query, "UPDATE %s.record SET blood_type = \"%s\", _status = \"%s\" WHERE donor_id = %d;", DATABASE_NAME, type, status, recordId);
+    sprintf(query, "UPDATE %s.record SET blood_type = \"%s\", status = \"%s\" WHERE id = %d;", DATABASE_NAME, type, status, recordId);
     makeQuery(connection, query);
 
     closeConnection(connection);

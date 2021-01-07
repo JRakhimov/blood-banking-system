@@ -55,6 +55,10 @@ int handleRequest(struct Client *client, struct Request *request) {
     if (strcmp(route.method, GET_PENDING_DONATES_METHOD) == 0) {
       return sendResponse(client->socket, getPendingRecords(client, *request));
     }
+
+    if (strcmp(route.method, SET_ANALYSIS_RESULT_METHOD) == 0) {
+      return sendResponse(client->socket, setAnalysisResult(client, *request));
+    }
   }
 
   return EXIT_SUCCESS;

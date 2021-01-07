@@ -19,5 +19,6 @@
 // Record
 #define DONATE_BLOOD_METHOD "donateBlood"
 #define GET_PENDING_DONATES_METHOD "getPendingDonates"
+#define SET_ANALYSIS_RESULT_METHOD "setAnalysisResult"
 
 #endif
